@@ -1,6 +1,7 @@
 import pygame as pg
 import tank
 import field
+import random
 
 pg.init()
 
@@ -10,7 +11,7 @@ WIDTH, HEIGHT = 800, 600
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('Чечня 1994')
 screen.fill((0, 0, 0))
-field.generate(screen)
+field.generate(random.randint(10, 15), random.randint(5, 10), screen)
 running = True
 while running:
     for event in pg.event.get():

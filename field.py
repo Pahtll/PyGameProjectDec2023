@@ -15,10 +15,12 @@ class Box:
         pg.draw.rect(screen, (255, 255, 255), pg.Rect(*self.coordinates, 50, 50), 2)
 
 
-def generate(screen):
+def generate(countOfStructures, countOfBoxes, screen):
     """Генерация случайного поля, которое состоит из случайного количества структур.
-    Каждая структура состоит из случайного количества коробок, стоящих рядом"""
-    countOfStructures = random.randint(10, 15)
+    Каждая структура состоит из случайного количества коробок, стоящих рядом.
+    countOfStructures - отвечает за примерное количество структур
+    countOfBoxes - отвечает за примерное количество коробок """
+
     listOfAllBoxes = set()
 
     # Первый цикл отвечает за количество структур
@@ -28,7 +30,6 @@ def generate(screen):
         box = Box((x, y))
         listOfAllBoxes.add((x, y))
         box.add(screen)
-        countOfBoxes = random.randint(5, 10)
 
         # Второй за количество коробок в структуре
         for _ in range(countOfBoxes - 1):
