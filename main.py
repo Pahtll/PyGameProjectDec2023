@@ -2,6 +2,8 @@ import pygame as pg
 import screeninfo
 import Tank
 
+
+
 pg.init()
 monitor = screeninfo.get_monitors()
 width = monitor[0].width
