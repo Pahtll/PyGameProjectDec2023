@@ -13,21 +13,20 @@ class tank():
 
     """Танк перемещается в одном их 4х направлений."""
     def move(self, direction: object) -> None:
+        # Изменяем координаты по дельте
         if direction == pg.K_RIGHT:
-            self.changedX = 10
-            self.changedY = 0
+            self.X += 10
+            self.Y += 0
         elif direction == pg.K_LEFT:
-            self.changedX = -10
-            self.changedY = 0
+            self.X += -10
+            self.Y += 0
         elif direction == pg.K_DOWN:
-            self.changedX = 0
-            self.changedY = -10
+            self.X += 0
+            self.Y += -10
         elif direction == pg.K_UP:
-            self.changedX = 0
-            self.changedY = 10
-        #Изменяем координаты по дельте
-        self.x += self.changedX
-        self.y += self.changedY
+            self.X += 0
+            self.Y += 10
+
 
     def shot(self):
         pass
