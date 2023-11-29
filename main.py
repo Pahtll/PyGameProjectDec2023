@@ -4,9 +4,9 @@ import field
 
 pg.init()
 
-# Для упрощения работы в дальнейшем оформил в качестве двух отдельных переменных
-width, height = 800, 600
-screen = pg.display.set_mode((width, height))
+# Для упрощения работы в дальнейшем оформил в качестве двух отдельных констант
+WIDTH, HEIGHT = 800, 600
+screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('Чечня 1994')
 
 running = True
