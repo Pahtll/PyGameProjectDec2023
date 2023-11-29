@@ -1,5 +1,6 @@
 import pygame as pg
 import screeninfo
+import Tank
 
 pg.init()
 monitor = screeninfo.get_monitors()
