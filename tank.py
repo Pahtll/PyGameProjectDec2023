@@ -9,22 +9,24 @@ class tank():
         self.x = startPos[0]
         self.y = startPos[1]
 
-    """Танк перемещается в одном их 4х направлений."""
     def move(self, direction: object) -> None:
+        """Танк перемещается в одном их 4х направлений."""
         # Изменяем координаты по дельте
         if direction == pg.K_RIGHT:
-            self.X += 10
-            self.Y += 0
+            self.X += 50
         elif direction == pg.K_LEFT:
-            self.X += -10
-            self.Y += 0
+            self.X += -50
         elif direction == pg.K_DOWN:
-            self.X += 0
-            self.Y += -10
+            self.Y += -50
         elif direction == pg.K_UP:
-            self.X += 0
-            self.Y += 10
-
+            self.Y += 50
 
     def shot(self):
+        """Т-34 стреляет фугасом."""
         pass
+
+    def die(self):
+        """Скажи, а почему ты вместе с танком не сгорел?"""
+        pass
+
+    #Что ещё должен делать танчик?
