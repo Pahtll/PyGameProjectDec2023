@@ -1,3 +1,4 @@
+"""Таня, танчик или просто Т-34."""
 import pygame as pg
 #from abc import ABC, abstractmethod
 #Закоментировал импорт, который пока не пригодился.
