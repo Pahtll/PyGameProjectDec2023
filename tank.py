@@ -8,8 +8,6 @@ class tank():
     def __init__(self, startPos: tuple) -> None:
         self.x = startPos[0]
         self.y = startPos[1]
-        self.changedX = 0
-        self.changedY = 0
 
     """Танк перемещается в одном их 4х направлений."""
     def move(self, direction: object) -> None:
