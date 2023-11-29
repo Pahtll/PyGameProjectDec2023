@@ -27,3 +27,6 @@ class tank():
         #Изменяем координаты по дельте
         self.x += self.changedX
         self.y += self.changedY
+
+    def shot(self):
+        pass

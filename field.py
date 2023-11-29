@@ -5,16 +5,16 @@ import pygame as pg
 
 class Box:
 
-    def __init__(self, coordinates):
+    def __init__(self, coordinates: tuple) -> None:
         """Инициализация коробки"""
         self.coordinates = coordinates
 
-    def add(self, screen):
+    def add(self, screen: tuple):
         """Рисует коробку на экране"""
         pg.draw.rect(screen, (255, 255, 255), pg.Rect(*self.coordinates, 50, 50), 2)
 
 
-def generate(countOfBoxes, screen):
+def generate(countOfBoxes: int, screen: tuple) -> None:
     """Генерация поля"""
     x = random.randint(0, 800)
     y = random.randint(0, 600)
