@@ -21,11 +21,11 @@ class tank():
         elif direction == pg.K_UP:
             self.Y += 50
 
-    def shot(self):
+    def shot(self) -> None:
         """Т-34 стреляет фугасом."""
         pass
 
-    def die(self):
+    def die(self) -> None:
         """Скажи, а почему ты вместе с танком не сгорел?"""
         pass
 
