@@ -1,7 +1,5 @@
 import pygame as pg
 import screeninfo
-import Tank
-
 
 
 pg.init()
