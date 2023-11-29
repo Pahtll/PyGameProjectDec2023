@@ -17,7 +17,7 @@ while running:
             if event.key == pg.K_ESCAPE:
                 running = False
 
-    screen.fill((255, 255, 255))
+    screen.fill((0, 0, 0))
 
     pg.display.flip()
 
