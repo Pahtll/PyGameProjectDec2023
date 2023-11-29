@@ -1,10 +1,11 @@
 import pygame as pg
 import tank
 
-
 pg.init()
-screen_size = 800, 600
-screen = pg.display.set_mode(screen_size)
+
+# Для упрощения работы в дальнейшем оформил в качестве двух отдельных переменных
+width, height = 800, 600
+screen = pg.display.set_mode((width, height))
 pg.display.set_caption('Чечня 1994')
 
 running = True
