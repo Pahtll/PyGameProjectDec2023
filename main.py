@@ -1,5 +1,6 @@
 import pygame as pg
 import tank
+import field
 
 pg.init()
 
@@ -19,7 +20,6 @@ while running:
                 running = False
 
     screen.fill((0, 0, 0))
-
     pg.display.flip()
 
 pg.quit()
