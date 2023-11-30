@@ -3,24 +3,28 @@ import pygame as pg
 #from abc import ABC, abstractmethod
 #Закоментировал импорт, который пока не пригодился.
 
-class tank():
+class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
-    def __init__(self, startPos: tuple):
-        self.x = startPos[0]
-        self.y = startPos[1]
+    def __init__(self):
+        super().__init__()
+        self.surf = pg.Surface((25, 15))
+        self.surf.fill((255, 255, 255))
+        self.rect = self.surf.get_rect()
+        self.x = 0
+        self.y = 0
 
-    def move(self, isButtonPressed, direction):
+    def move(self, keyInput):
         """Танк перемещается в одном их 4х направлений."""
         # Изменяем координаты по дельте
-        while isButtonPressed:
-            if direction == pg.K_RIGHT:
-                self.x += 10
-            elif direction == pg.K_LEFT:
-                self.x += -10
-            elif direction == pg.K_DOWN:
-                self.y += -10
-            elif direction == pg.K_UP:
-                self.y += 10
+        if keyInput == pg.K_d and self.x < 800:
+            self.x += 5
+        elif keyInput == pg.K_a and self.x > 0:
+            self.x -= 5
+        elif keyInput == pg.K_s and self.y < 600:
+            self.y += 5
+        elif keyInput == pg.K_w and self.y > 0:
+            self.y -= 5
+        return self.x, self.y
 
     def shot(self) -> None:
         """Т-34 стреляет фугасом."""
