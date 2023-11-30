@@ -4,6 +4,7 @@ import field
 import random
 
 pg.init()
+clock = pg.time.Clock()
 
 # Для упрощения работы в дальнейшем оформил в качестве двух отдельных констант
 WIDTH, HEIGHT = 800, 600
@@ -18,11 +19,25 @@ pg.display.set_icon(icon)
 
 # Тестовое создание танка
 tank1 = tank.Tank()
-screen.blit(tank1.surf, (0, 0))
+position = (0, 0)
 
-field.generate((10, 30), (1, 10), screen)
+
 running = True
 while running:
+
+    clock.tick(60)
+
+    background = pg.image.load("images/background.png")
+    screen.blit(background, (0, 0))
+
+    field.generate((10, 30), (1, 10), screen)
+
+    # Отображение спрайта танка
+    screen.blit(tank1.surf, position)
+
+    # Нажимаемые клавиши, переменная position для сохранения позиции
+    keys = pg.key.get_pressed()
+    position = tank1.move(keys)
 
     pg.display.update()
 
@@ -36,6 +51,8 @@ while running:
                 running = False
                 pg.quit()
 
-    pg.display.flip()
+    # pg.display.flip()
+
+clock.tick(10)
 
 pg.quit()
