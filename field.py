@@ -39,7 +39,7 @@ def generate(rangeOfStructures, rangeOfBoxes, screen):
         countOfBoxes = random.randint(rangeOfBoxes[0], rangeOfBoxes[1])
 
         # Второй за количество коробок в структуре
-        for _ in range(countOfBoxes - 1):
+        for _ in range(countOfBoxes):
             position = random.randint(1, 4)
 
             if position == 1 and x + 40 < 760:
