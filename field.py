@@ -5,6 +5,7 @@ import pygame as pg
 class Field:
     def __init__(self):
         self.boxes = []
+        self.listCoordinates = []
 
     def generate(self, rangeOfStructures, rangeOfBoxes, screen):
         """Генерация случайного поля, которое состоит из случайного количества структур.
@@ -15,7 +16,6 @@ class Field:
         rangeOfStructures - отвечает за примерное количество структур
         rangeOfBoxes - отвечает за примерное количество коробок."""
 
-        listOfAllBoxes = set()
         countOfStructures = random.randint(rangeOfStructures[0], rangeOfStructures[1])
         # Первый цикл отвечает за количество структур
         for _ in range(countOfStructures):
@@ -23,7 +23,7 @@ class Field:
             y = random.randrange(40, 560, 40)
             box = Box((x, y))
             self.boxes.append(box)
-            listOfAllBoxes.add((x, y))
+            self.listCoordinates.append((x, y))
             countOfBoxes = random.randint(rangeOfBoxes[0], rangeOfBoxes[1])
 
             # Второй за количество коробок в структуре
@@ -43,7 +43,7 @@ class Field:
                     y -= 40
 
                 # Список, который хранит в себе все данные о коробках. Он понадобится в будущем
-                listOfAllBoxes.add((x, y))
+                self.listCoordinates.append((x, y))
                 box = Box((x, y))
                 self.boxes.append(box)
 

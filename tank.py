@@ -1,5 +1,6 @@
 """Таня, танчик или просто Т-34."""
 import pygame as pg
+import field
 #from abc import ABC, abstractmethod
 #Закоментировал импорт, который пока не пригодился.
 
@@ -35,3 +36,6 @@ class Tank(pg.sprite.Sprite):
         pass
 
     #Что ещё должен делать танчик?
+
+def get_field_coordinates(listCoordinaates):
+    pass

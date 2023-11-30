@@ -23,7 +23,7 @@ elif 5 < randomNumber < 10:
 elif 0 <= randomNumber <= 5:
     background = pg.image.load("images/background.png")
 
-screen.blit(background, (0, 0))
+# Иконка
 icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
 
