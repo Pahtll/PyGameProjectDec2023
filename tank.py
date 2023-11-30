@@ -15,20 +15,12 @@ class tank():
         while isButtonPressed:
             if direction == pg.K_RIGHT:
                 self.x += 10
-                if not isButtonPressed:
-                    break
             elif direction == pg.K_LEFT:
                 self.x += -10
-                if not isButtonPressed:
-                    break
             elif direction == pg.K_DOWN:
                 self.y += -10
-                if not isButtonPressed:
-                    break
             elif direction == pg.K_UP:
                 self.y += 10
-                if not isButtonPressed:
-                    break
 
     def shot(self) -> None:
         """Т-34 стреляет фугасом."""
