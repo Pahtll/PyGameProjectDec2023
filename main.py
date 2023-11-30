@@ -22,7 +22,7 @@ while running:
             if keyInput == pg.K_ESCAPE:
                 running = False
             else:
-                tank1.move(keyInput)
+                tank1.move(event.type == pg.KEYDOWN, keyInput)
 
 
     pg.display.flip()
