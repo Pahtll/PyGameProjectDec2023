@@ -5,21 +5,22 @@ import pygame as pg
 
 class tank():
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
-    def __init__(self, startPos: tuple) -> None:
+    def __init__(self, startPos: tuple):
         self.x = startPos[0]
         self.y = startPos[1]
 
-    def move(self, direction: object) -> None:
+    def move(self, isButtonPressed, direction):
         """Танк перемещается в одном их 4х направлений."""
         # Изменяем координаты по дельте
-        if direction == pg.K_RIGHT:
-            self.X += 50
-        elif direction == pg.K_LEFT:
-            self.X += -50
-        elif direction == pg.K_DOWN:
-            self.Y += -50
-        elif direction == pg.K_UP:
-            self.Y += 50
+        while isButtonPressed:
+            if direction == pg.K_RIGHT:
+                self.x += 10
+            elif direction == pg.K_LEFT:
+                self.x += -10
+            elif direction == pg.K_DOWN:
+                self.y += -10
+            elif direction == pg.K_UP:
+                self.y += 10
 
     def shot(self) -> None:
         """Т-34 стреляет фугасом."""
