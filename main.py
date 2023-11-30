@@ -7,6 +7,7 @@ pg.init()
 clock = pg.time.Clock()
 
 # Для упрощения работы в дальнейшем оформил в качестве двух отдельных констант
+FPS = 60
 WIDTH, HEIGHT = 800, 600
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('bro< tanchikiiii')
@@ -21,16 +22,19 @@ pg.display.set_icon(icon)
 tank1 = tank.Tank()
 position = (0, 0)
 
+# Создание случайного поля
+field1 = field.Field()
+field1.generate((10, 30), (1, 10), screen)
 
 running = True
 while running:
 
-    clock.tick(60)
+    clock.tick(FPS)
 
     background = pg.image.load("images/background.png")
     screen.blit(background, (0, 0))
 
-    field.generate((10, 30), (1, 10), screen)
+    field1.create(screen)
 
     # Отображение спрайта танка
     screen.blit(tank1.surf, position)
