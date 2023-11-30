@@ -14,19 +14,19 @@ class tank():
         # Изменяем координаты по дельте
         while isButtonPressed:
             if direction == pg.K_RIGHT:
-                self.X += 10
+                self.x += 10
                 if not isButtonPressed:
                     break
             elif direction == pg.K_LEFT:
-                self.X += -10
+                self.x += -10
                 if not isButtonPressed:
                     break
             elif direction == pg.K_DOWN:
-                self.Y += -10
+                self.y += -10
                 if not isButtonPressed:
                     break
             elif direction == pg.K_UP:
-                self.Y += 10
+                self.y += 10
                 if not isButtonPressed:
                     break
 
