@@ -7,7 +7,6 @@ import field
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
-
     def __init__(self, screen, tank):
         """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
@@ -16,27 +15,28 @@ class Bullet(pg.sprite.Sprite):
         self.color = (255, 0, 0)
         self.speed = 5
 
+        #Направления выстрела = направление танка
+        self.direction = tank.direction
+
         #Координаты центра пули = координатам центра танка
         self.rect.center = tank.rect.center
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
-
     def update(self, tank):
-        """Перемещение пули"""
-        #Если танк смотрит вправо стреляем вправо и тд
-        if tank.direction == 'right':
+        """Перемещение пули. Если танк смотрит вправо, то пуля летит вправо и тд"""
+
+        if self.direction == 'right':
             self.x += self.speed
 
-        elif tank.direction == 'down':
+        elif self.direction == 'left':
+            self.x -= self.speed
+
+        elif self.direction == 'down':
             self.y += self.speed
 
-        elif tank.direction == 'up':
+        elif self.direction == 'up':
             self.y -= self.speed
-
-
-        elif tank.direction == 'left':
-            self.x -= self.speed
 
         self.rect.x = self.x
         self.rect.y = self.y
@@ -90,6 +90,5 @@ class Tank(pg.sprite.Sprite):
         pass
 
     #Что ещё должен делать танчик?
-
 def get_field_coordinates(listCoordinaates):
     pass

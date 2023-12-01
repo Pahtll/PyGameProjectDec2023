@@ -31,7 +31,7 @@ icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
 
 # Тестовое создание танка
-tank1 = tank. Tank()
+tank1 = tank.Tank()
 position = (0, 0)
 
 # Создание случайного поляd
@@ -48,7 +48,11 @@ while running:
     screen.blit(background, (0, 0))
 
     for bullet in bullets.sprites():
+
         bullet.drawBullet()
+        #Убирает пулю когда она достигает конца экрана
+        if bullet.rect.centerx > 800 or bullet.rect.centery > 600 or bullet.rect.centerx < 0 or bullet.rect.centery < 0:
+            bullets.remove(bullet)
 
     field1.create(screen)
 
