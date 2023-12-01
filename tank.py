@@ -49,7 +49,7 @@ class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
     def __init__(self):
         super().__init__()
-        self.surf = pg.Surface((40, 40))
+        self.surf = pg.Surface((20, 20))
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
         self.x = 0
@@ -57,23 +57,33 @@ class Tank(pg.sprite.Sprite):
         #direction - направление ствола танка
         self.direction = 'down'
         self.boxes_coordinates = []
+        self.boxX = []
+        self.boxY = []
 
     def move(self, keys):
         """Танк перемещается в одном их 4х направлений."""
         # Изменяем координаты по дельте
-        if keys[pg.K_d] and self.x < 800 :
+        if (keys[pg.K_d] and self.x < 800 and
+              all((not(x <= self.x + 20 <= x + 40)) or ((x <= self.x + 20 <= x + 40)
+                 and (not(y < self.y + 20 < y + 40)) and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
             self.x += 1
             self.direction = 'right'
 
-        elif keys[pg.K_a] and self.x > 0:
+        elif (keys[pg.K_a] and self.x > 0 and
+              all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
+                 and (not(y < self.y + 20 < y + 40))) and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
             self.x -= 1
             self.direction = 'left'
 
-        elif keys[pg.K_s] and self.y < 600:
+        elif (keys[pg.K_s] and self.y < 600 and
+              all((not(y <= self.y + 20 <= y + 40)) or (y <= self.y + 20 <= y + 40 and (not(x < self.x + 20 < x + 40))
+                 and (not(x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
             self.y += 1
             self.direction = 'down'
 
-        elif keys[pg.K_w] and self.y > 0:
+        elif (keys[pg.K_w] and self.y > 0 and
+              all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40 and (not (x < self.x + 20 < x + 40))
+                 and (not (x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
             self.y -= 1
             self.direction = 'up'
 
@@ -83,6 +93,8 @@ class Tank(pg.sprite.Sprite):
 
     def get_boxes_coordinates(self, transferred_boxes_coordinates):
         self.boxes_coordinates = transferred_boxes_coordinates
+        self.boxX = [el[0] for el in self.boxes_coordinates]
+        self.boxY = [el[1] for el in self.boxes_coordinates]
 
     def shot(self, screen, bullets):
         """каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами."""
