@@ -11,12 +11,11 @@ clock = pg.time.Clock()
 FPS = 60
 WIDTH, HEIGHT = 800, 600
 screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption('bro< tanchikiiii')
+pg.display.set_caption('bro, tanki')
 
 # Задний фон и иконка
 randomNumber = random.randint(0, 10)
 
-bullets = Group()
 if randomNumber == 10:
     background = pg.image.load("images/4urka.png")
 
@@ -34,10 +33,12 @@ pg.display.set_icon(icon)
 tank1 = tank.Tank()
 position = (0, 0)
 
-# Создание случайного поляd
+# Пули от танка
+bullets = Group()
+
+# Создание случайного поля
 field1 = field.Field()
 field1.generate((10, 30), (1, 10), screen)
-
 
 running = True
 while running:
@@ -50,6 +51,7 @@ while running:
     for bullet in bullets.sprites():
 
         bullet.drawBullet()
+
         #Убирает пулю когда она достигает конца экрана
         if bullet.rect.centerx > 800 or bullet.rect.centery > 600 or bullet.rect.centerx < 0 or bullet.rect.centery < 0:
             bullets.remove(bullet)
@@ -58,12 +60,17 @@ while running:
 
     # Отображение спрайта танка
     screen.blit(tank1.surf, position)
+    # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
+    tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field1.boxes])
 
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keysGetPressed = pg.key.get_pressed()
     keyGetDown = pg.KEYDOWN
     position = tank1.move(keysGetPressed)
+
+    # Обновление экрана
     pg.display.update()
+
     bullets.update(tank1)
 
     for event in pg.event.get():
@@ -82,8 +89,6 @@ while running:
             Кто знает как сделать иначе - делайте."""
             if keyInput == pg.K_SPACE:
                 tank1.shot(screen, bullets)
-
-
 
     # pg.display.flip()
 

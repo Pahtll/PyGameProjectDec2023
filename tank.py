@@ -56,11 +56,12 @@ class Tank(pg.sprite.Sprite):
         self.y = 0
         #direction - направление ствола танка
         self.direction = 'down'
+        self.boxes_coordinates = []
 
     def move(self, keys):
         """Танк перемещается в одном их 4х направлений."""
         # Изменяем координаты по дельте
-        if keys[pg.K_d] and self.x < 800:
+        if keys[pg.K_d] and self.x < 800 :
             self.x += 1
             self.direction = 'right'
 
@@ -80,6 +81,9 @@ class Tank(pg.sprite.Sprite):
         self.rect.y = self.y
         return self.x, self.y
 
+    def get_boxes_coordinates(self, transferred_boxes_coordinates):
+        self.boxes_coordinates = transferred_boxes_coordinates
+
     def shot(self, screen, bullets):
         """каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами."""
         bullet = Bullet(screen, self)
@@ -90,5 +94,4 @@ class Tank(pg.sprite.Sprite):
         pass
 
     #Что ещё должен делать танчик?
-def get_field_coordinates(listCoordinaates):
-    pass
+
