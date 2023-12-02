@@ -37,12 +37,15 @@ field_of_boxes.generate((10, 30), (1, 10))
 #Создание меню
 menu = menu.EscapeMenu(screen)
 
+#Создание меню
+menu = menu.EscapeMenu(screen)
+
 running = True
 while running:
 
     # Количество фпс
     clock.tick(FPS)
-
+    
     # Постоянное отображение заднего фона игры
     screen.blit(background, (0, 0))
 
@@ -57,9 +60,15 @@ while running:
     # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
     tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
+    # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
+    tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field1.boxes])
+
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keys_get_pressed = pg.key.get_pressed()
     tank_position = tank1.move(keys_get_pressed)
+
+    #Отрисовка меню esc
+    menu.draw()
 
     # Обновление экрана
     pg.display.update()
@@ -70,6 +79,9 @@ while running:
 
     for event in pg.event.get():
 
+        #Открытие меню esc
+        running = menu.open(event)
+
         if event.type == pg.QUIT:
             running = False
             pg.quit()
@@ -77,8 +89,6 @@ while running:
         elif event.type == pg.KEYDOWN:
             keyInput = event.key
 
-            if keyInput == pg.K_ESCAPE:
-                running = False
 
             """Пришлось написать управление выстрелом сюда, так как key.get_pressed() 
             реагирует только на удержание кнопки, из-за чего получается ебучий пулемёт.

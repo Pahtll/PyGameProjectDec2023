@@ -124,4 +124,3 @@ class Tank(pg.sprite.Sprite):
         pass
 
     #Что ещё должен делать танчик?
-
