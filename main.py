@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.sprite import Group
-import tank, field, background
+import tank, field, background, menu
 
 # Запуск программы
 pg.init()
@@ -34,10 +34,7 @@ boxes = Group()
 field_of_boxes = field.Field(boxes)
 field_of_boxes.generate((10, 30), (1, 10))
 
-#Создание меню
-menu = menu.EscapeMenu(screen)
-
-#Создание меню
+# Создание меню c кнопками "продолжить" и "выйти"
 menu = menu.EscapeMenu(screen)
 
 running = True
@@ -60,14 +57,11 @@ while running:
     # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
     tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
-    # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
-    tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field1.boxes])
-
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keys_get_pressed = pg.key.get_pressed()
     tank_position = tank1.move(keys_get_pressed)
 
-    #Отрисовка меню esc
+    # Отрисовка меню, открываемое на кнопку "esc"
     menu.draw()
 
     # Обновление экрана
@@ -76,10 +70,9 @@ while running:
     # Передаётся класс tank1 для понимания направления танка и корректировки относительно его направления пуль
     bullets.update(tank1)
 
-
     for event in pg.event.get():
 
-        #Открытие меню esc
+        # Открытие меню на esc
         running = menu.open(event)
 
         if event.type == pg.QUIT:
@@ -87,16 +80,13 @@ while running:
             pg.quit()
 
         elif event.type == pg.KEYDOWN:
-            keyInput = event.key
-
+            key_input = event.key
 
             """Пришлось написать управление выстрелом сюда, так как key.get_pressed() 
             реагирует только на удержание кнопки, из-за чего получается ебучий пулемёт.
             К сожалению альтернатрив данному методу, который реагирует только на нажатие я не нашёл
             Кто знает как сделать иначе - делайте."""
-            if keyInput == pg.K_SPACE:
+            if key_input == pg.K_SPACE:
                 tank1.generate_bullet(screen, bullets)
-
-    # pg.display.flip()
 
 pg.quit()
