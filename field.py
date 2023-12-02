@@ -5,7 +5,6 @@ import pygame as pg
 class Field:
     def __init__(self):
         self.boxes = []
-        self.listCoordinates = []
 
     def generate(self, rangeOfStructures, rangeOfBoxes, screen):
         """Генерация случайного поля, которое состоит из случайного количества структур.
@@ -23,7 +22,6 @@ class Field:
             y = random.randrange(40, 560, 40)
             box = Box((x, y))
             self.boxes.append(box)
-            self.listCoordinates.append((x, y))
             countOfBoxes = random.randint(rangeOfBoxes[0], rangeOfBoxes[1])
 
             # Второй за количество коробок в структуре
@@ -43,7 +41,6 @@ class Field:
                     y -= 40
 
                 # Список, который хранит в себе все данные о коробках. Он понадобится в будущем
-                self.listCoordinates.append((x, y))
                 box = Box((x, y))
                 self.boxes.append(box)
 
@@ -52,7 +49,6 @@ class Field:
         """
         Функция для перерисовки того же самого поля. Фиксированное поле.
         """
-
         for box in self.boxes:
             screen.blit(box.texture, box.coordinates)
 
@@ -65,6 +61,6 @@ class Box:
         self.texture = pg.image.load('images/box1.png')
         self.rect = self.texture.get_rect()
         self.boxes = []
-        # self.hp = 100
+        self.hp = 100
 
 
