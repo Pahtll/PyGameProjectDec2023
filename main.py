@@ -34,6 +34,9 @@ boxes = Group()
 field_of_boxes = field.Field(boxes)
 field_of_boxes.generate((10, 30), (1, 10))
 
+#Создание меню
+menu = menu.EscapeMenu(screen)
+
 running = True
 while running:
 
