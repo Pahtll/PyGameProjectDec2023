@@ -39,13 +39,14 @@ position = (0, 0)
 field1 = field.Field()
 field1.generate((10, 30), (1, 10), screen)
 
+#Создание меню
 menu = menu.EscapeMenu(screen)
+
 
 running = True
 while running:
 
     clock.tick(FPS)
-
     background = pg.image.load("images/background.png")
     screen.blit(background, (0, 0))
 
@@ -68,14 +69,19 @@ while running:
     keysGetPressed = pg.key.get_pressed()
     position = tank1.move(keysGetPressed)
 
+    #Отрисовка меню esc
     menu.draw()
+
     # Обновление экрана
 
     pg.display.update()
     bullets.update(tank1)
 
     for event in pg.event.get():
+
+        #Открытие меню esc
         running = menu.open(event)
+
         if event.type == pg.QUIT:
             running = False
 
