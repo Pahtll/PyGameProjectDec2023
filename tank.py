@@ -49,42 +49,45 @@ class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
     def __init__(self):
         super().__init__()
-        self.surf = pg.Surface((20, 20))
+        self.WIDTH = 20
+        self.HEIGHT = 20
+        self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
+        self.speed = 1
         self.x = 0
         self.y = 0
         #direction - направление ствола танка
         self.direction = 'down'
         self.boxes_coordinates = []
-        self.boxX = []
-        self.boxY = []
 
     def move(self, keys):
         """Танк перемещается в одном их 4х направлений."""
         # Изменяем координаты по дельте
         if (keys[pg.K_d] and self.x < 800 and
-              all((not(x <= self.x + 20 <= x + 40)) or ((x <= self.x + 20 <= x + 40)
-                 and (not(y < self.y + 20 < y + 40)) and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
-            self.x += 1
+              all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+                 and (not(y < self.y + self.HEIGHT < y + 40))
+                                    and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
+            self.x += self.speed
             self.direction = 'right'
 
         elif (keys[pg.K_a] and self.x > 0 and
               all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
-                 and (not(y < self.y + 20 < y + 40))) and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
-            self.x -= 1
+                 and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
+            self.x -= self.speed
             self.direction = 'left'
 
         elif (keys[pg.K_s] and self.y < 600 and
-              all((not(y <= self.y + 20 <= y + 40)) or (y <= self.y + 20 <= y + 40 and (not(x < self.x + 20 < x + 40))
-                 and (not(x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
-            self.y += 1
+              all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+                                                                 and (not(x < self.x + self.WIDTH < x + 40))
+                                                                 and (not(x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
+            self.y += self.speed
             self.direction = 'down'
 
         elif (keys[pg.K_w] and self.y > 0 and
-              all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40 and (not (x < self.x + 20 < x + 40))
+              all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40 and (not (x < self.x + self.WIDTH < x + 40))
                  and (not (x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
-            self.y -= 1
+            self.y -= self.speed
             self.direction = 'up'
 
         self.rect.x = self.x
@@ -92,14 +95,29 @@ class Tank(pg.sprite.Sprite):
         return self.x, self.y
 
     def get_boxes_coordinates(self, transferred_boxes_coordinates):
+        """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
-        self.boxX = [el[0] for el in self.boxes_coordinates]
-        self.boxY = [el[1] for el in self.boxes_coordinates]
+        print(transferred_boxes_coordinates)
 
-    def shot(self, screen, bullets):
-        """каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами."""
+    def generate_bullet(self, screen, bullets):
+        """
+        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
+        Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
+        идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
+        """
         bullet = Bullet(screen, self)
         bullets.add(bullet)
+
+
+    def shot_or_kill_box(self, bullets, boxes):
+        for bullet in bullets.sprites():
+
+            bullet.drawBullet()
+
+            # Убирает пулю когда она достигает конца экрана
+            if bullet.rect.centerx > 800 or bullet.rect.centery > 600 or bullet.rect.centerx < 0 or bullet.rect.centery < 0:
+                bullets.remove(bullet)
+        # collisions = pg.sprite.groupcollide(bullets, boxes)
 
     def die(self):
         """Скажи, а почему ты вместе с танком не сгорел?"""
