@@ -1,31 +1,68 @@
 """Случайно генерируемое поле"""
 import random
 import pygame as pg
+import pygame.sprite as pgsp
+
+class Box(pgsp.Sprite):
+    """
+    Коробки - это объекты, из которых строится карта. Их можно разрушить. Они имеют определённое количество hp.
+    """
+
+    def __init__(self, coordinates):
+        """Инициализация коробки"""
+        super().__init__()
+        self.coordinates = coordinates
+        self.texture = pg.image.load('images/box1.png')
+        self.rect = self.texture.get_rect()
+        self.boxes = []
+        self.hp = 100
 
 class Field:
-    def __init__(self):
-        self.boxes = []
+    """
+    Класс Field - поле из коробок.
+    Внутри класса есть методы:
+    • генерация поля - generate(self, rangeOfStructures, rangeOfBoxes)
+    • отрисовка поля на экране - duplicate_screen(screen)
 
-    def generate(self, rangeOfStructures, rangeOfBoxes, screen):
-        """Генерация случайного поля, которое состоит из случайного количества структур.
-        Сначала мы создаём коробку в случайном месте на карте. Затем генерируем случайное число от 1 до 4, которое отвечает
-        за позицию следующей коробки относительно предыдущей(если 1, то коробка генерируется справа от предыдущей, если 2
-        то снизу и тд). Таким образом мы получаем структуру, состоящую из случайного количества коробок стоящих рядом.
-        Коробки не могут появляться по краям экрана
-        rangeOfStructures - отвечает за примерное количество структур
-        rangeOfBoxes - отвечает за примерное количество коробок."""
+    На входе Field() получает параметр boxes?
+    boxes = Group() из pygame.sprite
+    """
+    def __init__(self, boxes):
+        self.boxes = boxes
 
-        countOfStructures = random.randint(rangeOfStructures[0], rangeOfStructures[1])
+    def generate(self, range_of_structures, range_of_boxes):
+        """
+        Генерация случайного поля, которое состоит из случайного количества структур.
+        Сначала мы создаём коробку в случайном месте на карте.
+        Затем генерируем случайное число от 1 до 4, которое отвечает за позицию следующей коробки
+        относительно предыдущей (если 1, то коробка генерируется справа от предыдущей, если 2 то снизу и тд).
+        Таким образом мы получаем структуру, состоящую из случайного количества коробок стоящих рядом.
+        Коробки не могут появляться по краям экрана.
+
+        * Структуры - это "кучки", "гроздья" коробок, раскиданные по карте.
+
+        Суть параметров:
+        • range_of_structures - отвечает за примерное количество структур.
+        • range_of_boxes - отвечает за примерное количество коробок в структуре.
+
+        Переменные count_of_structures и count_of_boxes были созданы для дополнительного контроля за рандомностью
+        распределения коробок.
+        Поскольку range_of_structures и range_of_boxes передают кортежи в виде (x, x`): x < x`, поэтому и
+        пишется обращение к индексам в скобках (range_of_structures[0], range_of_structures[1])
+        """
+
+        count_of_structures = random.randint(range_of_structures[0], range_of_structures[1])
+
         # Первый цикл отвечает за количество структур
-        for _ in range(countOfStructures):
+        for _ in range(count_of_structures):
             x = random.randrange(40, 760, 40)
             y = random.randrange(40, 560, 40)
             box = Box((x, y))
-            self.boxes.append(box)
-            countOfBoxes = random.randint(rangeOfBoxes[0], rangeOfBoxes[1])
+            self.boxes.add(box)
+            count_of_boxes = random.randint(range_of_boxes[0], range_of_boxes[1])
 
             # Второй за количество коробок в структуре
-            for _ in range(countOfBoxes - 1):
+            for _ in range(count_of_boxes - 1):
                 position = random.randint(1, 4)
 
                 if position == 1 and x + 40 < 760:
@@ -40,27 +77,16 @@ class Field:
                 elif position == 4 and y - 40 > 40:
                     y -= 40
 
-                # Список, который хранит в себе все данные о коробках. Он понадобится в будущем
+                # Список, который хранит в себе все данные о коробках.
                 box = Box((x, y))
-                self.boxes.append(box)
+                self.boxes.add(box)
 
-
-    def create(self, screen):
+    def duplicate_screen(self, screen):
         """
         Функция для перерисовки того же самого поля. Фиксированное поле.
         """
-        for box in self.boxes:
+        for box in self.boxes.sprites():
             screen.blit(box.texture, box.coordinates)
 
-class Box:
-    """Коробки - это объекты, из которых строится карта. Их можно разрушить. Они имеют определённое количество hp. """
-
-    def __init__(self, coordinates):
-        """Инициализация коробки"""
-        self.coordinates = coordinates
-        self.texture = pg.image.load('images/box1.png')
-        self.rect = self.texture.get_rect()
-        self.boxes = []
-        self.hp = 100
 
 

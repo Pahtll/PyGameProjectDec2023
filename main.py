@@ -1,11 +1,11 @@
 import pygame as pg
 from pygame.sprite import Group
-import tank
-import field
-import random
-import menu
+import tank, field, background
 
+# Запуск программы
 pg.init()
+
+# Создание экземлпяра класса Clock() для последующего указания количества кадров в секунду
 clock = pg.time.Clock()
 
 # Для упрощения работы в дальнейшем оформил в качестве двух отдельных констант
@@ -14,32 +14,28 @@ WIDTH, HEIGHT = 800, 600
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('bro, tanki')
 
-# Задний фон и иконка
-randomNumber = random.randint(0, 10)
+# Задний фон для игры
+background = background.create_background()
 
-if randomNumber == 10:
-    background = pg.image.load("images/4urka.png")
-
-elif 5 < randomNumber < 10:
-    background = pg.image.load("images/background2.png")
-
-elif 0 <= randomNumber <= 5:
-    background = pg.image.load("images/background.png")
-
-# Иконка
+# Иконка для приложения
 icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
 
 # Тестовое создание танка
 tank1 = tank.Tank()
-position = (0, 0)
+tank_position = (0, 0)
 
 # Пули от танка
 bullets = Group()
+# Коробки
+boxes = Group()
 
-# Создание случайного поля
-field1 = field.Field()
-field1.generate((10, 30), (1, 10), screen)
+# Создание поля. Генерация случайного поля, которое будет использоваться до конца игры.
+field_of_boxes = field.Field(boxes)
+field_of_boxes.generate((10, 30), (1, 10))
+
+#Создание меню
+menu = menu.EscapeMenu(screen)
 
 #Создание меню
 menu = menu.EscapeMenu(screen)
@@ -47,31 +43,29 @@ menu = menu.EscapeMenu(screen)
 running = True
 while running:
 
+    # Количество фпс
     clock.tick(FPS)
-    background = pg.image.load("images/background.png")
+    
+    # Постоянное отображение заднего фона игры
     screen.blit(background, (0, 0))
 
-    for bullet in bullets.sprites():
+    # Создание поля каждый раз по новой
+    field_of_boxes.duplicate_screen(screen)
 
-        bullet.drawBullet()
-
-        #Убирает пулю когда она достигает конца экрана
-        if bullet.rect.centerx > 800 or bullet.rect.centery > 600 or bullet.rect.centerx < 0 or bullet.rect.centery < 0:
-            bullets.remove(bullet)
-
-    field1.create(screen)
+    # Объекту tank1 передаются набор пулек и коробок
+    tank1.shot_or_kill_box(bullets, boxes)
 
     # Отображение спрайта танка
-    screen.blit(tank1.surf, position)
+    screen.blit(tank1.surf, tank_position)
     # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
-    tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field1.boxes])
+    tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
     # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
     tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field1.boxes])
 
     # Нажимаемые клавиши, переменная position для сохранения позиции
-    keysGetPressed = pg.key.get_pressed()
-    position = tank1.move(keysGetPressed)
+    keys_get_pressed = pg.key.get_pressed()
+    tank_position = tank1.move(keys_get_pressed)
 
     #Отрисовка меню esc
     menu.draw()
@@ -79,7 +73,9 @@ while running:
     # Обновление экрана
     pg.display.update()
 
+    # Передаётся класс tank1 для понимания направления танка и корректировки относительно его направления пуль
     bullets.update(tank1)
+
 
     for event in pg.event.get():
 
@@ -88,6 +84,7 @@ while running:
 
         if event.type == pg.QUIT:
             running = False
+            pg.quit()
 
         elif event.type == pg.KEYDOWN:
             keyInput = event.key
@@ -98,10 +95,8 @@ while running:
             К сожалению альтернатрив данному методу, который реагирует только на нажатие я не нашёл
             Кто знает как сделать иначе - делайте."""
             if keyInput == pg.K_SPACE:
-                tank1.shot(screen, bullets)
+                tank1.generate_bullet(screen, bullets)
 
     # pg.display.flip()
-
-clock.tick(10)
 
 pg.quit()
