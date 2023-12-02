@@ -3,6 +3,7 @@ from pygame.sprite import Group
 import tank
 import field
 import random
+import menu
 
 pg.init()
 clock = pg.time.Clock()
@@ -38,6 +39,7 @@ position = (0, 0)
 field1 = field.Field()
 field1.generate((10, 30), (1, 10), screen)
 
+menu = menu.EscapeMenu(screen)
 
 running = True
 while running:
@@ -59,22 +61,27 @@ while running:
     # Отображение спрайта танка
     screen.blit(tank1.surf, position)
 
+    # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
+    tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field1.boxes])
+
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keysGetPressed = pg.key.get_pressed()
-    keyGetDown = pg.KEYDOWN
     position = tank1.move(keysGetPressed)
+
+    menu.draw()
+    # Обновление экрана
+
     pg.display.update()
     bullets.update(tank1)
 
     for event in pg.event.get():
+        running = menu.open(event)
         if event.type == pg.QUIT:
             running = False
 
         elif event.type == pg.KEYDOWN:
             keyInput = event.key
 
-            if keyInput == pg.K_ESCAPE:
-                running = False
 
             """Пришлось написать управление выстрелом сюда, так как key.get_pressed() 
             реагирует только на удержание кнопки, из-за чего получается ебучий пулемёт.
