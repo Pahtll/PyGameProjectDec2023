@@ -73,19 +73,21 @@ class Tank(pg.sprite.Sprite):
 
         elif (keys[pg.K_a] and self.x > 0 and
               all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
-                 and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
+                 and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
+                  for x, y in self.boxes_coordinates)):
             self.x -= self.speed
             self.direction = 'left'
 
         elif (keys[pg.K_s] and self.y < 600 and
               all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
-                                                                 and (not(x < self.x + self.WIDTH < x + 40))
-                                                                 and (not(x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
+                    and (not(x < self.x + self.WIDTH < x + 40))
+                    and (not(x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
             self.y += self.speed
             self.direction = 'down'
 
         elif (keys[pg.K_w] and self.y > 0 and
-              all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40 and (not (x < self.x + self.WIDTH < x + 40))
+              all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
+                and (not (x < self.x + self.WIDTH < x + 40))
                  and (not (x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
             self.y -= self.speed
             self.direction = 'up'
