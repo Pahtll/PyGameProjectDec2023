@@ -7,14 +7,16 @@ import field
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
+
+    speed = 5
+    damage = 50
+
     def __init__(self, screen, tank):
         """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
         self.screen = screen
         self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 12, 2)
         self.color = (255, 0, 0)
-        self.speed = 5
-        self.damage = 50
 
         #Направления выстрела = направление танка
         self.direction = tank.direction
@@ -48,6 +50,10 @@ class Bullet(pg.sprite.Sprite):
 
 class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
+
+    speed = 1
+    hp = 200
+
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
@@ -56,49 +62,56 @@ class Tank(pg.sprite.Sprite):
         self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
-        self.speed = 1
         self.x = 0
         self.y = 0
         self.rect.x = self.x
         self.rect.y = self.y
+
         # direction - направление ствола танка
         self.direction = 'down'
         self.boxes_coordinates = []
 
-    def move(self, keys):
+    def move(self, keys, boxes):
         """Танк перемещается в одном их 4х направлений."""
         # Изменяем координаты по дельте
-        if (keys[pg.K_d] and self.x < 800 and
-              all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
-                 and (not(y < self.y + self.HEIGHT < y + 40))
-                                    and (not(y < self.y < y + 40))) for x, y in self.boxes_coordinates)):
-            self.x += self.speed
-            self.direction = 'right'
+        if keys[pg.K_d]:
+            if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+                and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.x += self.speed
+                self.direction = 'right'
+            else:
+                self.direction = 'right'
 
-        elif (keys[pg.K_a] and self.x > 0 and
-              all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
-                 and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
-                  for x, y in self.boxes_coordinates)):
-            self.x -= self.speed
-            self.direction = 'left'
+        elif keys[pg.K_a]:
+            if (self.x > 0 and all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
+                and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.x -= self.speed
+                self.direction = 'left'
+            else:
+                self.direction = 'left'
 
-        elif (keys[pg.K_s] and self.y < 600 and
-              all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
-                    and (not(x < self.x + self.WIDTH < x + 40))
-                    and (not(x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
-            self.y += self.speed
-            self.direction = 'down'
+        elif keys[pg.K_s]:
+            if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+                and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.y += self.speed
+                self.direction = 'down'
+            else:
+                self.direction = 'down'
 
-        elif (keys[pg.K_w] and self.y > 0 and
-              all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
-                and (not (x < self.x + self.WIDTH < x + 40))
-                 and (not (x < self.x < x + 40))) for x, y in self.boxes_coordinates)):
-            self.y -= self.speed
-            self.direction = 'up'
+        elif keys[pg.K_w]:
+            if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
+                and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
+                                   for x, y in self.boxes_coordinates)):
+                self.y -= self.speed
+                self.direction = 'up'
+            else:
+                self.direction = 'up'
 
         self.rect.x = self.x
         self.rect.y = self.y
-        return self.x, self.y
 
     def get_boxes_coordinates(self, transferred_boxes_coordinates):
         """Получение координат коробок"""
@@ -147,7 +160,7 @@ class Tank(pg.sprite.Sprite):
                 # От коробки отнимаем урон от пули
                 box.hp -= bullet.damage
 
-                # Удаляем коробку, если она потеряла всем хп 
+                # Удаляем коробку, если она потеряла всем хп
                 if box.hp == 0:
                     boxes.remove(box)
 
