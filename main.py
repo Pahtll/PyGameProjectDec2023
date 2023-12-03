@@ -22,7 +22,7 @@ icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
 
 # Тестовое создание танка
-tank1 = tank.Tank()
+tank_object = tank.Tank(screen)
 tank_position = (0, 0)
 
 # Пули от танка
@@ -34,7 +34,7 @@ boxes = Group()
 field_of_boxes = field.Field(boxes)
 field_of_boxes.generate((10, 30), (1, 10))
 
-# Создание меню c кнопками "продолжить" и "выйти"
+# Создание меню с кнопками "продолжить" и "выйти"
 menu = menu.EscapeMenu(screen)
 
 running = True
@@ -46,20 +46,20 @@ while running:
     # Постоянное отображение заднего фона игры
     screen.blit(background, (0, 0))
 
-    # Создание поля каждый раз по новой
+    # Создание поля из коробок каждый раз по новой
     field_of_boxes.duplicate_screen(screen)
 
     # Объекту tank1 передаются набор пулек и коробок
-    tank1.shot_or_kill_box(bullets, boxes)
+    tank_object.shot(bullets, boxes)
 
     # Отображение спрайта танка
-    screen.blit(tank1.surf, tank_position)
+    tank_object.update()
     # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
-    tank1.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
+    tank_object.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keys_get_pressed = pg.key.get_pressed()
-    tank_position = tank1.move(keys_get_pressed)
+    tank_object.move(keys_get_pressed)
 
     # Отрисовка меню, открываемое на кнопку "esc"
     menu.draw()
@@ -68,7 +68,7 @@ while running:
     pg.display.update()
 
     # Передаётся класс tank1 для понимания направления танка и корректировки относительно его направления пуль
-    bullets.update(tank1)
+    bullets.update(tank_object)
 
     for event in pg.event.get():
 
@@ -87,6 +87,6 @@ while running:
             К сожалению альтернатрив данному методу, который реагирует только на нажатие я не нашёл
             Кто знает как сделать иначе - делайте."""
             if key_input == pg.K_SPACE:
-                tank1.generate_bullet(screen, bullets)
+                tank_object.generate_bullet(screen, bullets)
 
 pg.quit()

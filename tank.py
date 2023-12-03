@@ -14,6 +14,7 @@ class Bullet(pg.sprite.Sprite):
         self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 12, 2)
         self.color = (255, 0, 0)
         self.speed = 5
+        self.damage = 50
 
         #Направления выстрела = направление танка
         self.direction = tank.direction
@@ -41,14 +42,15 @@ class Bullet(pg.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-    def drawBullet(self):
+    def draw_bullet(self):
         """Отрисовка пули. Пока что пуля это тупо красный шарик"""
         pg.draw.circle(self.screen, self.color, self.rect.center, 7)
 
 class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
-    def __init__(self):
+    def __init__(self, screen):
         super().__init__()
+        self.screen = screen
         self.WIDTH = 20
         self.HEIGHT = 20
         self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
@@ -57,7 +59,9 @@ class Tank(pg.sprite.Sprite):
         self.speed = 1
         self.x = 0
         self.y = 0
-        #direction - направление ствола танка
+        self.rect.x = self.x
+        self.rect.y = self.y
+        # direction - направление ствола танка
         self.direction = 'down'
         self.boxes_coordinates = []
 
@@ -99,7 +103,6 @@ class Tank(pg.sprite.Sprite):
     def get_boxes_coordinates(self, transferred_boxes_coordinates):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
-        print(transferred_boxes_coordinates)
 
     def generate_bullet(self, screen, bullets):
         """
@@ -111,15 +114,45 @@ class Tank(pg.sprite.Sprite):
         bullets.add(bullet)
 
 
-    def shot_or_kill_box(self, bullets, boxes):
+    def shot(self, bullets, boxes):
+        """
+        В первом цикле мы берем по пуле из группы спрайтов пуль. Каждая пуля - экземлпяр класса Bullet().
+        Далее отрисовываем каждую пулю.
+        Проверяем дошла ли пуля до границы центром. Если да, то убираем её.
+
+        Во втором цикле мы пробегаемся по коробкам из группы спрайтов коробок.
+        Проверяем касается ли пуля хитбокса коробки, если касается, то возвращает True.
+        Если
+        """
+
         for bullet in bullets.sprites():
 
-            bullet.drawBullet()
+            # Отрисовываем пулю
+            bullet.draw_bullet()
 
             # Убирает пулю когда она достигает конца экрана
             if bullet.rect.centerx > 800 or bullet.rect.centery > 600 or bullet.rect.centerx < 0 or bullet.rect.centery < 0:
                 bullets.remove(bullet)
-        # collisions = pg.sprite.groupcollide(bullets, boxes)
+
+        # Берём по коробке из группы спрайтов коробок. Для проверки
+        for box in boxes.sprites():
+
+            # Если пуля касается хитбокса коробки, то shot = True
+            shot = pg.sprite.spritecollide(box, bullets, True)
+
+            if shot:
+                # От коробки отнимаем урон от пули
+                box.hp -= bullet.damage
+
+                # Удаляем коробку, если она потеряла всем хп 
+                if box.hp == 0:
+                    boxes.remove(box)
+
+    def update(self):
+        """
+        Перерисовываем танк на экране.
+        """
+        self.screen.blit(self.surf, self.rect)
 
     def die(self):
         """Скажи, а почему ты вместе с танком не сгорел?"""

@@ -14,8 +14,11 @@ class Box(pgsp.Sprite):
         self.coordinates = coordinates
         self.texture = pg.image.load('images/box1.png')
         self.rect = self.texture.get_rect()
-        self.boxes = []
-        self.hp = 100
+        # {Объяснить, зачем rect.x и rect.y были добавлены в качестве атрибутов}
+        self.rect.x = self.coordinates[0]
+        self.rect.y = self.coordinates[1]
+        # self.boxes = []
+        self.hp = 150
 
 class Field:
     """
@@ -29,6 +32,7 @@ class Field:
     """
     def __init__(self, boxes):
         self.boxes = boxes
+        self.list_of_coordinates = set()
 
     def generate(self, range_of_structures, range_of_boxes):
         """
@@ -55,10 +59,17 @@ class Field:
 
         # Первый цикл отвечает за количество структур
         for _ in range(count_of_structures):
+
             x = random.randrange(40, 760, 40)
             y = random.randrange(40, 560, 40)
+            while (x, y) in self.list_of_coordinates:
+                x = random.randrange(40, 760, 40)
+                y = random.randrange(40, 560, 40)
+
             box = Box((x, y))
             self.boxes.add(box)
+            self.list_of_coordinates.add((x, y))
+
             count_of_boxes = random.randint(range_of_boxes[0], range_of_boxes[1])
 
             # Второй за количество коробок в структуре
@@ -77,16 +88,20 @@ class Field:
                 elif position == 4 and y - 40 > 40:
                     y -= 40
 
-                # Список, который хранит в себе все данные о коробках.
+                if (x, y) in self.list_of_coordinates:
+                    continue
+
+                # Группа спрайтов, которая хранит в себе все коробки.
                 box = Box((x, y))
                 self.boxes.add(box)
+                self.list_of_coordinates.add((x, y))
 
     def duplicate_screen(self, screen):
         """
         Функция для перерисовки того же самого поля. Фиксированное поле.
         """
         for box in self.boxes.sprites():
-            screen.blit(box.texture, box.coordinates)
+            screen.blit(box.texture, box.rect)
 
 
 

@@ -24,7 +24,7 @@ class Button:
         self.text = text
         self.color = (0, 0, 0)
         self.font = pygame.font.Font(None, int(height / 1.5))
-        self.fontColor = self.color
+        self.font_color = self.color
 
         """
         State отвечает за состояние кнопки. всего есть 3 состояния: normal - обычное, когда ничего не происходит
@@ -37,7 +37,7 @@ class Button:
         Функция выводит кнопку на экран
         """
         pg.draw.rect(self.screen, self.color, self.rect, 10)
-        text = self.font.render(self.text, True, self.fontColor)
+        text = self.font.render(self.text, True, self.font_color)
         position = text.get_rect(center=self.rect.center)
         self.screen.blit(text, position)
 
@@ -66,7 +66,7 @@ class Button:
         if event.type == pg.MOUSEBUTTONDOWN and self.state == 'hover':
             self.state = 'pressed'
 
-        self.fontColor = self.color
+        self.font_color = self.color
 
 
 
@@ -79,8 +79,8 @@ class EscapeMenu:
     """
     def __init__(self, screen):
         self.screen = screen
-        self.buttonResume = Button(screen, 200, 250, 70, "Продолжить")
-        self.buttonExit = Button(screen, 300, 250, 70, "Выход")
+        self.button_resume = Button(screen, 200, 250, 70, "Продолжить")
+        self.button_exit = Button(screen, 300, 250, 70, "Выход")
         self.is_opened = False
 
     def draw(self):
@@ -88,8 +88,8 @@ class EscapeMenu:
         Рисует кнопки, если меню открыто
         """
         if self.is_opened:
-            self.buttonResume.draw()
-            self.buttonExit.draw()
+            self.button_resume.draw()
+            self.button_exit.draw()
 
     def open(self, event):
         """
@@ -102,14 +102,14 @@ class EscapeMenu:
 
 
         if self.is_opened:
-            self.buttonResume.update(event)
-            self.buttonExit.update(event)
+            self.button_resume.update(event)
+            self.button_exit.update(event)
 
-            if self.buttonExit.state == 'pressed':
+            if self.button_exit.state == 'pressed':
                 return False
 
-            if self.buttonResume.state == 'pressed':
-                self.buttonResume.state = 'normal'
+            if self.button_resume.state == 'pressed':
+                self.button_resume.state = 'normal'
                 self.is_opened = False
 
         return True
