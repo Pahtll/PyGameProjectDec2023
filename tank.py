@@ -117,14 +117,17 @@ class Tank(pg.sprite.Sprite):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
 
-    def generate_bullet(self, screen, bullets):
+    def generate_bullet(self, screen, bullets, event):
         """
         Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
         Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """
-        bullet = Bullet(screen, self)
-        bullets.add(bullet)
+
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_SPACE:
+                bullet = Bullet(screen, self)
+                bullets.add(bullet)
 
 
     def shot(self, bullets, boxes):

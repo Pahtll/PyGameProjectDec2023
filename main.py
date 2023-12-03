@@ -62,7 +62,6 @@ while running:
 
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keys_get_pressed = pg.key.get_pressed()
-    tank_object.move(keys_get_pressed, boxes)
 
     # Отрисовка меню, открываемое на кнопку "esc"
     menu.draw()
@@ -70,10 +69,18 @@ while running:
     # Обновление экрана
     pg.display.update()
 
-    # Передаётся класс tank1 для понимания направления танка и корректировки относительно его направления пуль
-    bullets.update(tank_object)
+    if menu.is_opened == False:
+        """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
+        # Передаётся класс tank1 для понимания направления танка и корректировки относительно его направления пуль
+        bullets.update(tank_object)
+
+        #Передвижение танка
+        tank_object.move(keys_get_pressed, boxes)
 
     for event in pg.event.get():
+
+        if menu.is_opened == False:
+            tank_object.generate_bullet(screen, bullets, event)
 
         # Открытие меню на esc
         running = menu.open(event)
@@ -82,14 +89,5 @@ while running:
             running = False
             pg.quit()
 
-        elif event.type == pg.KEYDOWN:
-            key_input = event.key
-
-            """Пришлось написать управление выстрелом сюда, так как key.get_pressed() 
-            реагирует только на удержание кнопки, из-за чего получается ебучий пулемёт.
-            К сожалению альтернатрив данному методу, который реагирует только на нажатие я не нашёл
-            Кто знает как сделать иначе - делайте."""
-            if key_input == pg.K_SPACE:
-                tank_object.generate_bullet(screen, bullets)
 
 pg.quit()

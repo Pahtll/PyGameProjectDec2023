@@ -104,7 +104,6 @@ class EscapeMenu:
         if self.is_opened:
             self.button_resume.update(event)
             self.button_exit.update(event)
-
             if self.button_exit.state == 'pressed':
                 return False
 
