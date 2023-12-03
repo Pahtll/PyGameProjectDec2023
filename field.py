@@ -8,17 +8,17 @@ class Box(pgsp.Sprite):
     Коробки - это объекты, из которых строится карта. Их можно разрушить. Они имеют определённое количество hp.
     """
 
+    hp = 150
+
     def __init__(self, coordinates):
         """Инициализация коробки"""
         super().__init__()
         self.coordinates = coordinates
         self.texture = pg.image.load('images/box1.png')
         self.rect = self.texture.get_rect()
-        # {Объяснить, зачем rect.x и rect.y были добавлены в качестве атрибутов}
+        # Передаем два нижних атрибута, чтобы rect понимал размеры коробки и обрабатывал её хитбокс
         self.rect.x = self.coordinates[0]
         self.rect.y = self.coordinates[1]
-        # self.boxes = []
-        self.hp = 150
 
 class Field:
     """
@@ -101,6 +101,8 @@ class Field:
         Функция для перерисовки того же самого поля. Фиксированное поле.
         """
         for box in self.boxes.sprites():
+            # Передаем в параметры ф-ии текстурку и хитбокс
+            # Rect - это прямоугольник, который обозначает границы спрайта
             screen.blit(box.texture, box.rect)
 
 

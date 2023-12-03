@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.sprite import Group
-import tank, field, background, menu
+import tank, field, background, menu, controls
 
 # Запуск программы
 pg.init()
@@ -24,6 +24,9 @@ pg.display.set_icon(icon)
 # Тестовое создание танка
 tank_object = tank.Tank(screen)
 tank_position = (0, 0)
+
+# Установка сложности игры // Оставляйте 1 пока что 
+controls.set_difficulty(1)
 
 # Пули от танка
 bullets = Group()
@@ -59,7 +62,7 @@ while running:
 
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keys_get_pressed = pg.key.get_pressed()
-    tank_object.move(keys_get_pressed)
+    tank_object.move(keys_get_pressed, boxes)
 
     # Отрисовка меню, открываемое на кнопку "esc"
     menu.draw()
