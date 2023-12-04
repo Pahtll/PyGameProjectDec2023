@@ -11,12 +11,14 @@ class Bullet(pg.sprite.Sprite):
     speed = 5
     damage = 50
 
-    def __init__(self, screen, tank):
+    def __init__(self, screen, tank, team):
         """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
         self.screen = screen
-        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 12, 2)
+        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 7, 7)
         self.color = (255, 0, 0)
+        #Нужно для того чтобы разграничивать пули одного танка от пуль другого
+        self.team = team
 
         #Направления выстрела = направление танка
         self.direction = tank.direction
@@ -54,81 +56,22 @@ class Tank(pg.sprite.Sprite):
     speed = 1
     hp = 200
 
-    def __init__(self, screen):
+    def __init__(self, screen, x, y):
         super().__init__()
         self.screen = screen
         self.WIDTH = 20
         self.HEIGHT = 20
-        self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
-        self.surf.fill((255, 255, 255))
+        #self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
         self.rect = self.surf.get_rect()
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = y
         self.rect.x = self.x
         self.rect.y = self.y
-
-        # direction - направление ствола танка
-        self.direction = 'down'
         self.boxes_coordinates = []
-
-    def move(self, keys, boxes):
-        """Танк перемещается в одном их 4х направлений."""
-        # Изменяем координаты по дельте
-        if keys[pg.K_d]:
-            if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
-                and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
-                                     for x, y in self.boxes_coordinates)):
-                self.x += self.speed
-                self.direction = 'right'
-            else:
-                self.direction = 'right'
-
-        elif keys[pg.K_a]:
-            if (self.x > 0 and all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
-                and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
-                                     for x, y in self.boxes_coordinates)):
-                self.x -= self.speed
-                self.direction = 'left'
-            else:
-                self.direction = 'left'
-
-        elif keys[pg.K_s]:
-            if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
-                and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
-                                     for x, y in self.boxes_coordinates)):
-                self.y += self.speed
-                self.direction = 'down'
-            else:
-                self.direction = 'down'
-
-        elif keys[pg.K_w]:
-            if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
-                and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
-                                   for x, y in self.boxes_coordinates)):
-                self.y -= self.speed
-                self.direction = 'up'
-            else:
-                self.direction = 'up'
-
-        self.rect.x = self.x
-        self.rect.y = self.y
 
     def get_boxes_coordinates(self, transferred_boxes_coordinates):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
-
-    def generate_bullet(self, screen, bullets, event):
-        """
-        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
-        Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
-        идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
-        """
-
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_SPACE:
-                bullet = Bullet(screen, self)
-                bullets.add(bullet)
-
 
     def shot(self, bullets, boxes):
         """
@@ -174,4 +117,124 @@ class Tank(pg.sprite.Sprite):
         """Скажи, а почему ты вместе с танком не сгорел?"""
         pass
 
-    #Что ещё должен делать танчик?
+class TankTopLeft(Tank):
+    """
+    Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)
+    """
+    def __init__(self, screen, x, y):
+        self.surf = pg.image.load('images/tank1.png')
+        super().__init__(screen, x, y)
+        # direction - направление ствола танка
+        self.direction = 'down'
+        #self.surf.fill((0, 255, 0))
+
+    def move(self, keys, boxes):
+        """Танк перемещается в одном их 4х направлений."""
+        # Изменяем координаты по дельте
+        if keys[pg.K_d]:
+            if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+                and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.x += self.speed
+            self.direction = 'right'
+
+        elif keys[pg.K_a]:
+            if (self.x > 0 and all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
+                and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.x -= self.speed
+            self.direction = 'left'
+
+        elif keys[pg.K_s]:
+            if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+                and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.y += self.speed
+            self.direction = 'down'
+
+        elif keys[pg.K_w]:
+            if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
+                and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
+                                   for x, y in self.boxes_coordinates)):
+                self.y -= self.speed
+            self.direction = 'up'
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+    def generate_bullet(self, screen, bullets, event):
+        """
+        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
+        Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
+        идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
+        """
+
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_SPACE:
+                bullet = Bullet(screen, self, 1)
+                bullets.add(bullet)
+
+
+class TankBottomRight(Tank):
+    """
+    Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол)
+    """
+    def __init__(self, screen, x, y):
+        self.surf = pg.image.load('images/tank2.png')
+        super().__init__(screen, x, y)
+        # direction - направление ствола танка
+        self.direction = 'up'
+        #self.surf.fill((255, 0, 0))
+
+    def move(self, keys, boxes):
+        """Танк перемещается в одном их 4х направлений."""
+        # Изменяем координаты по дельте
+        """Танк перемещается в одном их 4х направлений."""
+        # Изменяем координаты по дельте
+        if keys[pg.K_RIGHT]:
+            if (self.x < 800 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+                                                                                    and (not (
+                            y < self.y + self.HEIGHT < y + 40)) and (not (y < self.y < y + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.x += self.speed
+            self.direction = 'right'
+
+        elif keys[pg.K_LEFT]:
+            if (self.x > 0 and all((not (x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
+                                                                      and (
+                                                                      not (y < self.y + self.HEIGHT < y + 40))) and (
+                                                                     not (y < self.y < y + 40)))
+                                   for x, y in self.boxes_coordinates)):
+                self.x -= self.speed
+            self.direction = 'left'
+
+        elif keys[pg.K_DOWN]:
+            if (self.y < 600 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+                                                                                     and (not (
+                            x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
+                                     for x, y in self.boxes_coordinates)):
+                self.y += self.speed
+            self.direction = 'down'
+
+        elif keys[pg.K_UP]:
+            if (self.y > 0 and all((not (y <= self.y <= y + 40)) or (y <= self.y <= y + 40
+                                                                     and (not (x < self.x + self.WIDTH < x + 40)) and (
+                                                                     not (x < self.x < x + 40)))
+                                   for x, y in self.boxes_coordinates)):
+                self.y -= self.speed
+            self.direction = 'up'
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+    def generate_bullet(self, screen, bullets, event):
+        """
+        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
+        Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
+        идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
+        """
+
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_RCTRL:
+                bullet = Bullet(screen, self, 2)
+                bullets.add(bullet)
