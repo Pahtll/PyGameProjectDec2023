@@ -22,10 +22,10 @@ icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
 
 # Тестовое создание танка
-tank_object = tank.Tank(screen)
-tank_position = (0, 0)
+tank_topleft = tank.TankTopLeft(screen, 0, 0)
+tank_bottomright = tank.TankBottomRight(screen, 778, 578)
 
-# Установка сложности игры // Оставляйте 1 пока что 
+# Установка сложности игры // Оставляйте 1 пока что
 controls.set_difficulty(1)
 
 # Пули от танка
@@ -45,20 +45,24 @@ while running:
 
     # Количество фпс
     clock.tick(FPS)
-    
+
     # Постоянное отображение заднего фона игры
     screen.blit(background, (0, 0))
 
     # Создание поля из коробок каждый раз по новой
     field_of_boxes.duplicate_screen(screen)
 
-    # Объекту tank1 передаются набор пулек и коробок
-    tank_object.shot(bullets, boxes)
+    # Объекту tank_topleft передаются набор пулек и коробок
+    tank_topleft.shot(bullets, boxes)
+    tank_bottomright.shot(bullets, boxes)
 
     # Отображение спрайта танка
-    tank_object.update()
-    # Объекту tank1 передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
-    tank_object.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
+    tank_topleft.update()
+    tank_bottomright.update()
+
+    # Объекту tank_topleft передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
+    tank_topleft.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
+    tank_bottomright.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
     # Нажимаемые клавиши, переменная position для сохранения позиции
     keys_get_pressed = pg.key.get_pressed()
@@ -71,16 +75,19 @@ while running:
 
     if menu.is_opened == False:
         """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
-        # Передаётся класс tank1 для понимания направления танка и корректировки относительно его направления пуль
-        bullets.update(tank_object)
+        # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
+        bullets.update(tank_topleft)
+        bullets.update(tank_bottomright)
 
         #Передвижение танка
-        tank_object.move(keys_get_pressed, boxes)
+        tank_topleft.move(keys_get_pressed, boxes)
+        tank_bottomright.move(keys_get_pressed, boxes)
 
     for event in pg.event.get():
 
         if menu.is_opened == False:
-            tank_object.generate_bullet(screen, bullets, event)
+            tank_topleft.generate_bullet(screen, bullets, event)
+            tank_bottomright.generate_bullet(screen, bullets, event)
 
         # Открытие меню на esc
         running = menu.open(event)
