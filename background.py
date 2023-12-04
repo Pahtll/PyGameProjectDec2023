@@ -1,10 +1,10 @@
+"""Создание заднего фона игры"""
 import random, pygame as pg
 
 
 def create_background():
-    """
-    Случайная генерация заднего фона.
-    """
+    """Случайная генерация заднего фона."""
+
     randomNumber = random.randint(0, 10)
 
     if randomNumber == 10:

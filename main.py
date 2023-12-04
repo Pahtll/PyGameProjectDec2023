@@ -23,7 +23,7 @@ pg.display.set_icon(icon)
 
 # Тестовое создание танка
 tank_topleft = tank.TankTopLeft(screen, 0, 0)
-tank_bottomright = tank.TankBottomRight(screen, 778, 578)
+tank_bottomright = tank.TankBottomRight(screen, 764, 558)
 
 # Установка сложности игры // Оставляйте 1 пока что
 controls.set_difficulty(1)
@@ -52,7 +52,7 @@ while running:
     # Создание поля из коробок каждый раз по новой
     field_of_boxes.duplicate_screen(screen)
 
-    # Объекту tank_topleft передаются набор пулек и коробок
+    # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
     tank_topleft.shot(bullets, boxes)
     tank_bottomright.shot(bullets, boxes)
 
@@ -60,7 +60,7 @@ while running:
     tank_topleft.update()
     tank_bottomright.update()
 
-    # Объекту tank_topleft передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
+    # Объектам tank_topleft и tank_bottomright передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
     tank_topleft.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
     tank_bottomright.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
