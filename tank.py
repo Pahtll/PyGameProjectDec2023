@@ -1,9 +1,7 @@
-"""Таня, танчик или просто Т-34."""
+"""Создание пуль, танков"""
 import pygame as pg
 import pygame.sprite
 import field
-#from abc import ABC, abstractmethod
-#Закоментировал импорт, который пока не пригодился.
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
@@ -12,11 +10,7 @@ class Bullet(pg.sprite.Sprite):
     damage = 50
 
     def __init__(self, screen, tank):
-<<<<<<< Updated upstream
         """Создаём пулю в позиции танка"""
-=======
-        """Создаём пулю в позиции танка."""
->>>>>>> Stashed changes
         super(Bullet, self).__init__()
         self.screen = screen
         self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 12, 2)
@@ -59,93 +53,28 @@ class Tank(pg.sprite.Sprite):
     hp = 200
     shot_delay = 500
 
-    def __init__(self, screen):
+    def __init__(self, screen, x, y):
         super().__init__()
         self.screen = screen
         self.WIDTH = 20
         self.HEIGHT = 20
-<<<<<<< Updated upstream
-        self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
-        self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect()
-        self.x = 0
-        self.y = 0
-=======
         # self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
+        # self.surf.fill((255, 255, 255))
         # self.rect = self.surf.get_rect()
         self.x = x
         self.y = y
->>>>>>> Stashed changes
         self.rect.x = self.x
         self.rect.y = self.y
 
-        # direction - направление ствола танка
-        self.direction = 'down'
         self.boxes_coordinates = []
         # Проверка: жив или нет. По умолчанию стоит True
         self.alive = True
-
-    def move(self, keys, boxes):
-        """Танк перемещается в одном их 4х направлений."""
-        # Изменяем координаты по дельте
-        if keys[pg.K_d]:
-            if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
-                and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
-                                     for x, y in self.boxes_coordinates)):
-                self.x += self.speed
-                self.direction = 'right'
-            else:
-                self.direction = 'right'
-
-        elif keys[pg.K_a]:
-            if (self.x > 0 and all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
-                and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
-                                     for x, y in self.boxes_coordinates)):
-                self.x -= self.speed
-                self.direction = 'left'
-            else:
-                self.direction = 'left'
-
-        elif keys[pg.K_s]:
-            if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
-                and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
-                                     for x, y in self.boxes_coordinates)):
-                self.y += self.speed
-                self.direction = 'down'
-            else:
-                self.direction = 'down'
-
-        elif keys[pg.K_w]:
-            if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
-                and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
-                                   for x, y in self.boxes_coordinates)):
-                self.y -= self.speed
-                self.direction = 'up'
-            else:
-                self.direction = 'up'
-
-        self.rect.x = self.x
-        self.rect.y = self.y
 
     def get_boxes_coordinates(self, transferred_boxes_coordinates):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
 
-<<<<<<< Updated upstream
-    def generate_bullet(self, screen, bullets):
-        """
-        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
-        Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
-        идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
-        """
-        bullet = Bullet(screen, self)
-        bullets.add(bullet)
-
-
-    def shot(self, bullets, boxes):
-=======
     def shot(self, bullets, boxes, other_tank):
->>>>>>> Stashed changes
         """
         В первом цикле мы берем по пуле из группы спрайтов пуль. Каждая пуля - экземлпяр класса Bullet().
         Далее отрисовываем каждую пулю.
@@ -191,18 +120,6 @@ class Tank(pg.sprite.Sprite):
                     boxes.remove(box)
 
     def update(self):
-<<<<<<< Updated upstream
-        """
-        Перерисовываем танк на экране.
-        """
-        self.screen.blit(self.surf, self.rect)
-
-    def die(self):
-        """Скажи, а почему ты вместе с танком не сгорел?"""
-        pass
-
-    #Что ещё должен делать танчик?
-=======
         """Перерисовываем танк на экране."""
         if self.alive:
             self.screen.blit(self.surf, self.rect)
@@ -230,32 +147,32 @@ class TankTopLeft(Tank):
         if not (self.alive): return 0
 
         if keys[pg.K_d]:
+            self.direction = 'right'
             if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
-            self.direction = 'right'
 
         elif keys[pg.K_a]:
+            self.direction = 'left'
             if (self.x > 0 and all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
                 and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x -= self.speed
-            self.direction = 'left'
 
         elif keys[pg.K_s]:
+            self.direction = 'down'
             if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
-            self.direction = 'down'
 
         elif keys[pg.K_w]:
+            self.direction = 'up'
             if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
                 and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates)):
                 self.y -= self.speed
-            self.direction = 'up'
 
         self.rect.x = self.x
         self.rect.y = self.y
@@ -294,32 +211,32 @@ class TankBottomRight(Tank):
         if not (self.alive): return 0
 
         if keys[pg.K_RIGHT]:
+            self.direction = 'right'
             if (self.x < 800 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not (y < self.y + self.HEIGHT < y + 40)) and (not (y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
-            self.direction = 'right'
 
         elif keys[pg.K_LEFT]:
+            self.direction = 'left'
             if (self.x > 0 and all((not (x <= self.x <= x + 40)) or ((x <= self.x <= x + 40 and
                   (not (y < self.y + self.HEIGHT < y + 40))) and (not (y < self.y < y + 40)))
                                    for x, y in self.boxes_coordinates)):
                 self.x -= self.speed
-            self.direction = 'left'
 
         elif keys[pg.K_DOWN]:
+            self.direction = 'down'
             if (self.y < 600 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                     and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
-            self.direction = 'down'
 
         elif keys[pg.K_UP]:
+            self.direction = 'up'
             if (self.y > 0 and all((not (y <= self.y <= y + 40)) or (y <= self.y <= y + 40 and
                 (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates)):
                 self.y -= self.speed
-            self.direction = 'up'
 
         self.rect.x = self.x
         self.rect.y = self.y
@@ -336,4 +253,3 @@ class TankBottomRight(Tank):
             self.last_shot = now
             bullet = Bullet(screen, self)
             bullets_bottomright.add(bullet)
->>>>>>> Stashed changes

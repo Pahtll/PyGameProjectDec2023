@@ -27,15 +27,16 @@ class Button:
         self.font_color = self.color
 
         """
-        State отвечает за состояние кнопки. всего есть 3 состояния: normal - обычное, когда ничего не происходит
-        hover - когда пользователь наводится на кнопку но не нажимает. pressed - когда пользователь нажал на кнопку
+        State отвечает за состояние кнопки. Всего есть 3 состояния: 
+        normal - обычное, когда ничего не происходит
+        hover - когда пользователь наводится на кнопку но не нажимает. 
+        pressed - когда пользователь нажал на кнопку
         """
         self.state = 'normal'
 
     def draw(self):
-        """
-        Функция выводит кнопку на экран
-        """
+        """Функция выводит кнопку на экран."""
+
         pg.draw.rect(self.screen, self.color, self.rect, 10)
         text = self.font.render(self.text, True, self.font_color)
         position = text.get_rect(center=self.rect.center)
@@ -46,6 +47,7 @@ class Button:
         Функция update проверяет, совершались ли в этот кадр какие-либо действия с кнопкой. Если совершались,
         то обновляет её состояние.
         """
+
         if event.type == pg.MOUSEMOTION:
 
             # Пользователь двинул мышкой и координаты этого движения пришлись на кнопку, то изменить её состояние на hover
@@ -84,9 +86,8 @@ class EscapeMenu:
         self.is_opened = False
 
     def draw(self):
-        """
-        Рисует кнопки, если меню открыто
-        """
+        """Рисует кнопки, если меню открыто."""
+
         if self.is_opened:
             self.button_resume.draw()
             self.button_exit.draw()
@@ -96,6 +97,7 @@ class EscapeMenu:
         Открывает меню и обновляет кнопки, если клавиша escape нажата. Функция возвращает True, если кнопка
         выход не была нажата и False в противном случае. Затем это значение передаётся в переменную running.
         """
+
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
                 self.is_opened = not self.is_opened
@@ -104,7 +106,6 @@ class EscapeMenu:
         if self.is_opened:
             self.button_resume.update(event)
             self.button_exit.update(event)
-
             if self.button_exit.state == 'pressed':
                 return False
 
