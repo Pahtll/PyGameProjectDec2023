@@ -21,17 +21,27 @@ background = background.create_background()
 icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
 
+<<<<<<< Updated upstream
 # Тестовое создание танка
 tank_object = tank.Tank(screen)
 tank_position = (0, 0)
 
 # Установка сложности игры // Оставляйте 1 пока что 
+=======
+# Установка сложности игры // Оставляйте 1 пока что
+>>>>>>> Stashed changes
 controls.set_difficulty(1)
 
 # Пули от танка
-bullets = Group()
+bullets_topleft = Group()
+bullets_bottomright = Group()
+
 # Коробки
 boxes = Group()
+
+# Создание танков
+tank_topleft = tank.TankTopLeft(screen, 0, 0)
+tank_bottomright = tank.TankBottomRight(screen, 764, 558)
 
 # Создание поля. Генерация случайного поля, которое будет использоваться до конца игры.
 field_of_boxes = field.Field(boxes)
@@ -52,8 +62,14 @@ while running:
     # Создание поля из коробок каждый раз по новой
     field_of_boxes.duplicate_screen(screen)
 
+<<<<<<< Updated upstream
     # Объекту tank1 передаются набор пулек и коробок
     tank_object.shot(bullets, boxes)
+=======
+    # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
+    tank_topleft.shot(bullets_topleft, boxes, tank_bottomright)
+    tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft)
+>>>>>>> Stashed changes
 
     # Отображение спрайта танка
     tank_object.update()
@@ -70,11 +86,33 @@ while running:
     # Обновление экрана
     pg.display.update()
 
+<<<<<<< Updated upstream
     # Передаётся класс tank1 для понимания направления танка и корректировки относительно его направления пуль
     bullets.update(tank_object)
 
     for event in pg.event.get():
 
+=======
+    if menu.is_opened == False:
+        """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
+        # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
+        bullets_topleft.update(tank_topleft)
+        bullets_bottomright.update(tank_bottomright)
+
+        #Передвижение танка
+        tank_topleft.move(keys_get_pressed, boxes)
+        tank_bottomright.move(keys_get_pressed, boxes)
+
+    for event in pg.event.get():
+
+        if menu.is_opened == False:
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    tank_topleft.generate_bullet(screen, bullets_topleft, event)
+                if event.key == pg.K_RCTRL:
+                    tank_bottomright.generate_bullet(screen, bullets_bottomright, event)
+
+>>>>>>> Stashed changes
         # Открытие меню на esc
         running = menu.open(event)
 
