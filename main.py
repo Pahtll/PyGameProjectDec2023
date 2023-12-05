@@ -14,12 +14,16 @@ WIDTH, HEIGHT = 800, 600
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('bro, tanki')
 
-# Задний фон для игры
-background = background.create_background()
-
 # Иконка для приложения
 icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
+
+#Главное меню
+main_menu = menu.MainMenu(screen)
+
+# Задний фон для игры
+background = background.create_background()
+
 
 # Тестовое создание танка
 tank_topleft = tank.TankTopLeft(screen, 0, 0)
@@ -46,51 +50,57 @@ while running:
     # Количество фпс
     clock.tick(FPS)
 
-    # Постоянное отображение заднего фона игры
-    screen.blit(background, (0, 0))
+    if main_menu.is_opened == False:
+        # Постоянное отображение заднего фона игры
+        screen.blit(background, (0, 0))
 
-    # Создание поля из коробок каждый раз по новой
-    field_of_boxes.duplicate_screen(screen)
+        # Создание поля из коробок каждый раз по новой
+        field_of_boxes.duplicate_screen(screen)
 
-    # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
-    tank_topleft.shot(bullets, boxes)
-    tank_bottomright.shot(bullets, boxes)
+        # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
+        tank_topleft.shot(bullets, boxes)
+        tank_bottomright.shot(bullets, boxes)
 
-    # Отображение спрайта танка
-    tank_topleft.update()
-    tank_bottomright.update()
+        # Отображение спрайта танка
+        tank_topleft.update()
+        tank_bottomright.update()
 
-    # Объектам tank_topleft и tank_bottomright передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
-    tank_topleft.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
-    tank_bottomright.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
+        # Объектам tank_topleft и tank_bottomright передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
+        tank_topleft.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
+        tank_bottomright.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
-    # Нажимаемые клавиши, переменная position для сохранения позиции
-    keys_get_pressed = pg.key.get_pressed()
+        # Нажимаемые клавиши, переменная position для сохранения позиции
+        keys_get_pressed = pg.key.get_pressed()
 
-    # Отрисовка меню, открываемое на кнопку "esc"
-    menu.draw()
+        # Отрисовка меню, открываемое на кнопку "esc"
+        menu.draw()
+
+        if menu.is_opened == False:
+            """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
+            # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
+            bullets.update(tank_topleft)
+            bullets.update(tank_bottomright)
+
+            # Передвижение танка
+            tank_topleft.move(keys_get_pressed, boxes)
+            tank_bottomright.move(keys_get_pressed, boxes)
+
+    elif main_menu.is_opened:
+        main_menu.draw()
 
     # Обновление экрана
     pg.display.update()
 
-    if menu.is_opened == False:
-        """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
-        # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
-        bullets.update(tank_topleft)
-        bullets.update(tank_bottomright)
-
-        #Передвижение танка
-        tank_topleft.move(keys_get_pressed, boxes)
-        tank_bottomright.move(keys_get_pressed, boxes)
-
     for event in pg.event.get():
 
-        if menu.is_opened == False:
+        if main_menu.is_opened == False:
             tank_topleft.generate_bullet(screen, bullets, event)
             tank_bottomright.generate_bullet(screen, bullets, event)
+            menu.open(event, main_menu)
 
-        # Открытие меню на esc
-        running = menu.open(event)
+        elif main_menu.is_opened:
+            # Открытие меню на esc
+            main_menu.update(event)
 
         if event.type == pg.QUIT:
             running = False
