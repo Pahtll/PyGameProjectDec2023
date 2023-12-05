@@ -58,14 +58,10 @@ class Tank(pg.sprite.Sprite):
         self.screen = screen
         self.WIDTH = 20
         self.HEIGHT = 20
-        # self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
-        # self.surf.fill((255, 255, 255))
-        # self.rect = self.surf.get_rect()
         self.x = x
         self.y = y
         self.rect.x = self.x
         self.rect.y = self.y
-
         self.boxes_coordinates = []
         # Проверка: жив или нет. По умолчанию стоит True
         self.alive = True
@@ -88,6 +84,7 @@ class Tank(pg.sprite.Sprite):
         # Если танк мёртв, то он стрелять больше не может.
         if not(self.alive): return 0
 
+        # Отрисовка по пули и проверка на границы экрана
         for bullet in bullets.sprites():
 
             # Отрисовываем пулю
@@ -99,6 +96,8 @@ class Tank(pg.sprite.Sprite):
 
         # Проверка жив ли чужой танк. Нужно для того, чтобы пули не упирались в его спрайт.
         if other_tank.alive:
+
+            # Проверяет, касается ли пуля другого танка.
             hit = pygame.sprite.spritecollide(other_tank, bullets, True)
             if hit:
                 other_tank.hp -= bullet.damage
@@ -183,6 +182,10 @@ class TankTopLeft(Tank):
         Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.draw_bullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """
+
+        # Если танк мертв, то создавать спрайты пуль он не может.
+        if not(self.alive): return 0
+
         now = pygame.time.get_ticks()
         if now - self.last_shot >= self.shot_delay:
             self.last_shot = now
@@ -247,6 +250,9 @@ class TankBottomRight(Tank):
         Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """
+
+        # Если танк мертв, то создавать спрайты пуль он не может.
+        if not (self.alive): return 0
 
         now = pygame.time.get_ticks()
         if now - self.last_shot >= self.shot_delay:
