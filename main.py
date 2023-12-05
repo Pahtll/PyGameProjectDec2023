@@ -21,10 +21,6 @@ background = background.create_background()
 icon = pg.image.load('images/icon.png')
 pg.display.set_icon(icon)
 
-# Тестовое создание танка
-tank_topleft = tank.TankTopLeft(screen, 0, 0)
-tank_bottomright = tank.TankBottomRight(screen, 764, 558)
-
 # Установка сложности игры // Оставляйте 1 пока что
 controls.set_difficulty(1)
 
@@ -61,10 +57,6 @@ while running:
     # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
     tank_topleft.shot(bullets_topleft, boxes, tank_bottomright)
     tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft)
-
-    # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
-    tank_topleft.shot(bullets, boxes)
-    tank_bottomright.shot(bullets, boxes)
 
     # Отображение спрайта танка
     tank_topleft.update()
@@ -108,5 +100,5 @@ while running:
         if event.type == pg.QUIT:
             running = False
             pg.quit()
-
+# Закрываем игру
 pg.quit()
