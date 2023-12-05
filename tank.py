@@ -1,22 +1,20 @@
-"""Создание танка"""
+"""Создание пуль, танков"""
 import pygame as pg
 import pygame.sprite
 import field
 
 class Bullet(pg.sprite.Sprite):
-    """Создаём пулю, которая является спрайтом."""
+    """Создаём пулю, которая является спрайтом"""
 
     speed = 5
     damage = 50
 
-    def __init__(self, screen, tank, team):
-        """Создаём пулю в позиции танка."""
+    def __init__(self, screen, tank):
+        """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
         self.screen = screen
-        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 7, 7)
+        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 12, 2)
         self.color = (255, 0, 0)
-        #Нужно для того чтобы разграничивать пули одного танка от пуль другого
-        self.team = team
 
         #Направления выстрела = направление танка
         self.direction = tank.direction
@@ -27,7 +25,7 @@ class Bullet(pg.sprite.Sprite):
         self.y = float(self.rect.y)
 
     def update(self, tank):
-        """Перемещение пули. Если танк смотрит вправо, то пуля летит вправо и тд."""
+        """Перемещение пули. Если танк смотрит вправо, то пуля летит вправо и тд"""
 
         if self.direction == 'right':
             self.x += self.speed
@@ -45,7 +43,7 @@ class Bullet(pg.sprite.Sprite):
         self.rect.y = self.y
 
     def draw_bullet(self):
-        """Отрисовка пули. Пока что пуля это тупо красный шарик."""
+        """Отрисовка пули. Пока что пуля это тупо красный шарик"""
         pg.draw.circle(self.screen, self.color, self.rect.center, 7)
 
 class Tank(pg.sprite.Sprite):
@@ -53,24 +51,30 @@ class Tank(pg.sprite.Sprite):
 
     speed = 1
     hp = 200
+    shot_delay = 500
 
     def __init__(self, screen, x, y):
         super().__init__()
         self.screen = screen
         self.WIDTH = 20
         self.HEIGHT = 20
-        self.rect = self.surf.get_rect()
+        # self.surf = pg.Surface((self.WIDTH, self.HEIGHT))
+        # self.surf.fill((255, 255, 255))
+        # self.rect = self.surf.get_rect()
         self.x = x
         self.y = y
         self.rect.x = self.x
         self.rect.y = self.y
+
         self.boxes_coordinates = []
+        # Проверка: жив или нет. По умолчанию стоит True
+        self.alive = True
 
     def get_boxes_coordinates(self, transferred_boxes_coordinates):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
 
-    def shot(self, bullets, boxes):
+    def shot(self, bullets, boxes, other_tank):
         """
         В первом цикле мы берем по пуле из группы спрайтов пуль. Каждая пуля - экземлпяр класса Bullet().
         Далее отрисовываем каждую пулю.
@@ -78,7 +82,11 @@ class Tank(pg.sprite.Sprite):
 
         Во втором цикле мы пробегаемся по коробкам из группы спрайтов коробок.
         Проверяем касается ли пуля хитбокса коробки, если касается, то возвращает True.
+        Если
         """
+
+        # Если танк мёртв, то он стрелять больше не может.
+        if not(self.alive): return 0
 
         for bullet in bullets.sprites():
 
@@ -88,6 +96,14 @@ class Tank(pg.sprite.Sprite):
             # Убирает пулю когда она достигает конца экрана
             if bullet.rect.centerx > 800 or bullet.rect.centery > 600 or bullet.rect.centerx < 0 or bullet.rect.centery < 0:
                 bullets.remove(bullet)
+
+        # Проверка жив ли чужой танк. Нужно для того, чтобы пули не упирались в его спрайт.
+        if other_tank.alive:
+            hit = pygame.sprite.spritecollide(other_tank, bullets, True)
+            if hit:
+                other_tank.hp -= bullet.damage
+                if other_tank.hp == 0:
+                    other_tank.alive = False
 
         # Берём по коробке из группы спрайтов коробок. Для проверки
         for box in boxes.sprites():
@@ -105,119 +121,135 @@ class Tank(pg.sprite.Sprite):
 
     def update(self):
         """Перерисовываем танк на экране."""
-        self.screen.blit(self.surf, self.rect)
-
-    def die(self):
-        """Скажи, а почему ты вместе с танком не сгорел?"""
-        pass
+        if self.alive:
+            self.screen.blit(self.surf, self.rect)
 
 class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
+
     def __init__(self, screen, x, y):
         self.surf = pg.image.load('images/tank1.png')
+        self.rect = self.surf.get_rect()
         super().__init__(screen, x, y)
+        self.rect.x = self.x
+        self.rect.y = self.y
 
         # direction - направление ствола танка
         self.direction = 'down'
 
+        # last_shot - время последнего выстрела
+        self.last_shot = pygame.time.get_ticks() - self.shot_delay
+
     def move(self, keys, boxes):
         """Танк перемещается в одном их 4х направлений."""
 
+        # Если танк мертв, то двигаться он не может.
+        if not (self.alive): return 0
+
         if keys[pg.K_d]:
+            self.direction = 'right'
             if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
-            self.direction = 'right'
 
         elif keys[pg.K_a]:
+            self.direction = 'left'
             if (self.x > 0 and all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
                 and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x -= self.speed
-            self.direction = 'left'
 
         elif keys[pg.K_s]:
+            self.direction = 'down'
             if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
-            self.direction = 'down'
 
         elif keys[pg.K_w]:
+            self.direction = 'up'
             if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
                 and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates)):
                 self.y -= self.speed
-            self.direction = 'up'
 
         self.rect.x = self.x
         self.rect.y = self.y
 
-    def generate_bullet(self, screen, bullets, event):
+    def generate_bullet(self, screen, bullets_topleft, event):
         """
         Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
-        Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
+        Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.draw_bullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """
-
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_SPACE:
-                bullet = Bullet(screen, self, 1)
-                bullets.add(bullet)
-
+        now = pygame.time.get_ticks()
+        if now - self.last_shot >= self.shot_delay:
+            self.last_shot = now
+            bullet = Bullet(screen, self)
+            bullets_topleft.add(bullet)
 
 class TankBottomRight(Tank):
     """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол."""
     def __init__(self, screen, x, y):
         self.surf = pg.image.load('images/tank2.png')
+        self.rect = self.surf.get_rect()
         super().__init__(screen, x, y)
+        self.rect.x = self.x
+        self.rect.y = self.y
 
         # direction - направление ствола танка
         self.direction = 'up'
 
+        # last_shot - время последнего выстрела
+        self.last_shot = pygame.time.get_ticks() - self.shot_delay
+
     def move(self, keys, boxes):
         """Танк перемещается в одном их 4х направлений."""
 
+        # Если танк мертв, то двигаться он не может.
+        if not (self.alive): return 0
+
         if keys[pg.K_RIGHT]:
+            self.direction = 'right'
             if (self.x < 800 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not (y < self.y + self.HEIGHT < y + 40)) and (not (y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
-            self.direction = 'right'
 
         elif keys[pg.K_LEFT]:
+            self.direction = 'left'
             if (self.x > 0 and all((not (x <= self.x <= x + 40)) or ((x <= self.x <= x + 40 and
                   (not (y < self.y + self.HEIGHT < y + 40))) and (not (y < self.y < y + 40)))
                                    for x, y in self.boxes_coordinates)):
                 self.x -= self.speed
-            self.direction = 'left'
 
         elif keys[pg.K_DOWN]:
+            self.direction = 'down'
             if (self.y < 600 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                     and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
-            self.direction = 'down'
 
         elif keys[pg.K_UP]:
+            self.direction = 'up'
             if (self.y > 0 and all((not (y <= self.y <= y + 40)) or (y <= self.y <= y + 40 and
                 (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates)):
                 self.y -= self.speed
-            self.direction = 'up'
 
         self.rect.x = self.x
         self.rect.y = self.y
 
-    def generate_bullet(self, screen, bullets, event):
+    def generate_bullet(self, screen, bullets_bottomright, event):
         """
         Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
         Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """
 
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_RCTRL:
-                bullet = Bullet(screen, self, 2)
-                bullets.add(bullet)
+        now = pygame.time.get_ticks()
+        if now - self.last_shot >= self.shot_delay:
+            self.last_shot = now
+            bullet = Bullet(screen, self)
+            bullets_bottomright.add(bullet)
