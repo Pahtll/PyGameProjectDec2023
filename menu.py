@@ -71,6 +71,7 @@ class Button:
         self.font_color = self.color
 
 class MainMenu:
+    """Главное меню, из которого происходит вход в игру и выход из неё."""
     def __init__(self, screen):
         self.screen = screen
         self.background = pg.image.load('images/menuBG.png')
@@ -79,22 +80,25 @@ class MainMenu:
         self.is_opened = True
 
     def draw(self):
+        """Отрисовывает меню, состоящее из кнопок и заднего фона """
         if self.is_opened:
             self.screen.blit(self.background, (0, 0))
             self.button_start.draw()
             self.button_exit.draw()
 
     def update(self, event):
+        """Проверка нажаты ли кнопки """
         self.button_start.update(event)
         self.button_exit.update(event)
 
         if self.button_start.state == 'pressed':
-
             self.is_opened = False
             self.button_start.state = 'normal'
 
         elif self.button_exit.state == 'pressed':
-            pg.quit()
+            return False
+        return True
+
 class EscapeMenu:
     """
     Класс EscapeMenu создаёт меню, которое открывается на клавишу escape, и имеет две кнопки: продолжить и выйти.
