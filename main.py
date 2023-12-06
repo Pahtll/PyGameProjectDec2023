@@ -33,20 +33,25 @@ tank_bottomright = tank.TankBottomRight(screen, 764, 558)
 controls.set_difficulty(1)
 
 # Пули от танка
-bullets = Group()
+bullets_topleft = Group()
+bullets_bottomright = Group()
+
 # Коробки
 boxes = Group()
+
+# Создание танков
+tank_topleft = tank.TankTopLeft(screen, 0, 0)
+tank_bottomright = tank.TankBottomRight(screen, 764, 558)
 
 # Создание поля. Генерация случайного поля, которое будет использоваться до конца игры.
 field_of_boxes = field.Field(boxes)
 field_of_boxes.generate((10, 30), (1, 10))
 
-# Создание меню с кнопками "продолжить" и "выйти"
+# Создание меню с кнопками "продолжить" и "выйти в главное менню"
 menu = menu.EscapeMenu(screen)
 
 running = True
 while running:
-
     # Количество фпс
     clock.tick(FPS)
 
@@ -58,8 +63,9 @@ while running:
         field_of_boxes.duplicate_screen(screen)
 
         # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
-        tank_topleft.shot(bullets, boxes)
-        tank_bottomright.shot(bullets, boxes)
+        tank_topleft.shot(bullets_topleft, boxes, tank_bottomright)
+        tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft)
+
 
         # Отображение спрайта танка
         tank_topleft.update()
@@ -78,8 +84,8 @@ while running:
         if menu.is_opened == False:
             """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
             # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
-            bullets.update(tank_topleft)
-            bullets.update(tank_bottomright)
+            bullets_topleft.update(tank_topleft)
+            bullets_bottomright.update(tank_bottomright)
 
             # Передвижение танка
             tank_topleft.move(keys_get_pressed, boxes)
@@ -94,17 +100,20 @@ while running:
     for event in pg.event.get():
 
         if main_menu.is_opened == False:
-            tank_topleft.generate_bullet(screen, bullets, event)
-            tank_bottomright.generate_bullet(screen, bullets, event)
+
             menu.open(event, main_menu)
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    tank_topleft.generate_bullet(screen, bullets_topleft, event)
+                if event.key == pg.K_RCTRL:
+                    tank_bottomright.generate_bullet(screen, bullets_bottomright, event)
 
         elif main_menu.is_opened:
-            # Открытие меню на esc
-            main_menu.update(event)
+            # Если нажата кнопка выхода из игры, то программа должна завершиться.
+           running = main_menu.update(event)
 
         if event.type == pg.QUIT:
             running = False
             pg.quit()
-
-
+# Закрываем игру
 pg.quit()
