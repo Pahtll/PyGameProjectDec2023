@@ -22,7 +22,7 @@ class Button:
         self.rect = pg.Rect(self.x, y, width, height)
         self.height = height
         self.text = text
-        self.color = (0, 0, 0)
+        self.color = (255, 255, 255)
         self.font = pygame.font.Font(None, int(height / 1.5))
         self.font_color = self.color
 
@@ -59,10 +59,10 @@ class Button:
 
         # Если пользователь навёлся на кнопку, то подсветить её белым
         if self.state == 'hover':
-            self.color = (255, 255, 255)
+            self.color = (0, 0, 0)
 
         elif self.state == 'normal':
-            self.color = (0, 0, 0)
+            self.color = (255, 255, 255)
 
         # Если пользователь навёлся на кнопку и нажал на мышку, то состояние кнопки - pressed
         if event.type == pg.MOUSEBUTTONDOWN and self.state == 'hover':
@@ -70,7 +70,34 @@ class Button:
 
         self.font_color = self.color
 
+class MainMenu:
+    """Главное меню, из которого происходит вход в игру и выход из неё."""
+    def __init__(self, screen):
+        self.screen = screen
+        self.background = pg.image.load('images/menuBG.png')
+        self.button_start = Button(screen, 200, 250, 70, "Начать игру")
+        self.button_exit = Button(screen, 300, 250, 70, "Выйти из игры")
+        self.is_opened = True
 
+    def draw(self):
+        """Отрисовывает меню, состоящее из кнопок и заднего фона """
+        if self.is_opened:
+            self.screen.blit(self.background, (0, 0))
+            self.button_start.draw()
+            self.button_exit.draw()
+
+    def update(self, event):
+        """Проверка нажаты ли кнопки """
+        self.button_start.update(event)
+        self.button_exit.update(event)
+
+        if self.button_start.state == 'pressed':
+            self.is_opened = False
+            self.button_start.state = 'normal'
+
+        elif self.button_exit.state == 'pressed':
+            return False
+        return True
 
 class EscapeMenu:
     """
@@ -81,8 +108,8 @@ class EscapeMenu:
     """
     def __init__(self, screen):
         self.screen = screen
-        self.button_resume = Button(screen, 200, 250, 70, "Продолжить")
-        self.button_exit = Button(screen, 300, 250, 70, "Выход")
+        self.button_resume = Button(screen, 200, 400, 70, "Продолжить")
+        self.button_main_menu = Button(screen, 300, 400, 70, "Выйти в главное меню")
         self.is_opened = False
 
     def draw(self):
@@ -90,9 +117,9 @@ class EscapeMenu:
 
         if self.is_opened:
             self.button_resume.draw()
-            self.button_exit.draw()
+            self.button_main_menu.draw()
 
-    def open(self, event):
+    def open(self, event, menu):
         """
         Открывает меню и обновляет кнопки, если клавиша escape нажата. Функция возвращает True, если кнопка
         выход не была нажата и False в противном случае. Затем это значение передаётся в переменную running.
@@ -105,14 +132,16 @@ class EscapeMenu:
 
         if self.is_opened:
             self.button_resume.update(event)
-            self.button_exit.update(event)
-            if self.button_exit.state == 'pressed':
-                return False
+            self.button_main_menu.update(event)
 
             if self.button_resume.state == 'pressed':
                 self.button_resume.state = 'normal'
                 self.is_opened = False
 
-        return True
+            if self.button_main_menu.state == 'pressed':
+                self.button_main_menu.state = 'normal'
+                menu.is_opened = True
+                self.is_opened = False
+
 
 
