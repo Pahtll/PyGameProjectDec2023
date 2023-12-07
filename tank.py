@@ -13,7 +13,7 @@ class Bullet(pg.sprite.Sprite):
         """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
         self.screen = screen
-        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 7, 7)
+        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 12, 2)
         self.color = (255, 0, 0)
 
         #Направления выстрела = направление танка
@@ -155,7 +155,7 @@ class TankTopLeft(Tank):
             self.direction = 'right'
             self.HEIGHT = 35
             self.WIDTH = 39
-            if (self.x < 765 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+            if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
@@ -173,7 +173,7 @@ class TankTopLeft(Tank):
             self.direction = 'down'
             self.HEIGHT = 39
             self.WIDTH = 35
-            if (self.y < 565 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+            if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
@@ -262,7 +262,7 @@ class TankBottomRight(Tank):
             self.direction = 'right'
             self.HEIGHT = 35
             self.WIDTH = 39
-            if (self.x < 765 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+            if (self.x < 800 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not (y < self.y + self.HEIGHT < y + 40)) and (not (y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
@@ -280,7 +280,7 @@ class TankBottomRight(Tank):
             self.direction = 'down'
             self.HEIGHT = 39
             self.WIDTH = 35
-            if (self.y < 565 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+            if (self.y < 600 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                     and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
