@@ -108,7 +108,7 @@ while running:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     tank_topleft.generate_bullet(screen, bullets_topleft, event)
-                if event.key == pg.K_RALT:
+                if event.key == pg.K_RCTRL:
                     tank_bottomright.generate_bullet(screen, bullets_bottomright, event)
 
         elif main_menu.is_opened:
