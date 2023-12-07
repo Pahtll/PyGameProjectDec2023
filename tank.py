@@ -56,8 +56,8 @@ class Tank(pg.sprite.Sprite):
     def __init__(self, screen, x, y):
         super().__init__()
         self.screen = screen
-        self.WIDTH = 20
-        self.HEIGHT = 20
+        self.WIDTH = 35
+        self.HEIGHT = 39
         self.x = x
         self.y = y
         self.rect.x = self.x
@@ -118,17 +118,19 @@ class Tank(pg.sprite.Sprite):
                 if box.hp == 0:
                     boxes.remove(box)
 
-    def update(self):
-        """Перерисовываем танк на экране."""
-        if self.alive:
-            self.screen.blit(self.surf, self.rect)
-
 class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
 
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank1.png')
+        self.surf = pg.image.load('images/tank1_down.png')
         self.rect = self.surf.get_rect()
+
+        # Загружаем текстуры для каждого из направлений
+        self.image_down = pg.image.load('images/tank1_down.png')
+        self.image_right = pg.image.load('images/tank1_right.png')
+        self.image_left = pg.image.load('images/tank1_left.png')
+        self.image_up = pg.image.load('images/tank1_up.png')
+
         super().__init__(screen, x, y)
         self.rect.x = self.x
         self.rect.y = self.y
@@ -192,11 +194,42 @@ class TankTopLeft(Tank):
             bullet = Bullet(screen, self)
             bullets_topleft.add(bullet)
 
+    def update(self):
+        """Перерисовываем танк на экране."""
+        if self.alive:
+
+            if self.direction == 'right':
+                self.HEIGHT = 39
+                self.WIDTH = 35
+                self.screen.blit(self.image_right, self.rect)
+
+            elif self.direction == 'down':
+                self.HEIGHT = 35
+                self.WIDTH = 39
+                self.screen.blit(self.image_down, self.rect)
+
+            elif self.direction == 'left':
+                self.HEIGHT = 39
+                self.WIDTH = 35
+                self.screen.blit(self.image_left, self.rect)
+
+            elif self.direction == 'up':
+                self.HEIGHT = 35
+                self.WIDTH = 39
+                self.screen.blit(self.image_up, self.rect)
+
 class TankBottomRight(Tank):
     """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол."""
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank2.png')
+        self.surf = pg.image.load('images/tank2_right.png')
         self.rect = self.surf.get_rect()
+
+        # Загружаем текстуры танка для каждого направления
+        self.image_right = pg.image.load('images/tank2_right.png')
+        self.image_left = pg.image.load('images/tank2_left.png')
+        self.image_up = pg.image.load('images/tank2_up.png')
+        self.image_down = pg.image.load('images/tank2_down.png')
+
         super().__init__(screen, x, y)
         self.rect.x = self.x
         self.rect.y = self.y
@@ -259,3 +292,19 @@ class TankBottomRight(Tank):
             self.last_shot = now
             bullet = Bullet(screen, self)
             bullets_bottomright.add(bullet)
+
+    def update(self):
+        """Перерисовываем танк на экране."""
+        if self.alive:
+
+            if self.direction == 'right':
+                self.screen.blit(self.image_right, self.rect)
+
+            elif self.direction == 'down':
+                self.screen.blit(self.image_down, self.rect)
+
+            elif self.direction == 'left':
+                self.screen.blit(self.image_left, self.rect)
+
+            elif self.direction == 'up':
+                self.screen.blit(self.image_up, self.rect)
