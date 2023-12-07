@@ -48,7 +48,8 @@ field_of_boxes = field.Field(boxes)
 field_of_boxes.generate((10, 30), (1, 10))
 
 # Создание меню с кнопками "продолжить" и "выйти в главное менню"
-menu = menu.EscapeMenu(screen)
+escape_menu = menu.EscapeMenu(screen)
+victory_menu = menu.VictoryMenu(screen)
 
 running = True
 while running:
@@ -79,17 +80,19 @@ while running:
         keys_get_pressed = pg.key.get_pressed()
 
         # Отрисовка меню, открываемое на кнопку "esc"
-        menu.draw()
+        escape_menu.draw()
 
-        if menu.is_opened == False:
-            """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
-            # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
-            bullets_topleft.update(tank_topleft)
-            bullets_bottomright.update(tank_bottomright)
+        if escape_menu.is_opened == False:
+            victory_menu.draw(tank_topleft, tank_bottomright)
+            if victory_menu.is_openned == False:
+                """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
+                # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
+                bullets_topleft.update(tank_topleft)
+                bullets_bottomright.update(tank_bottomright)
 
-            # Передвижение танка
-            tank_topleft.move(keys_get_pressed, boxes)
-            tank_bottomright.move(keys_get_pressed, boxes)
+                # Передвижение танка
+                tank_topleft.move(keys_get_pressed, boxes)
+                tank_bottomright.move(keys_get_pressed, boxes)
 
     elif main_menu.is_opened:
         main_menu.draw()
@@ -101,7 +104,7 @@ while running:
 
         if main_menu.is_opened == False:
 
-            menu.open(event, main_menu)
+            escape_menu.open(event, main_menu)
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     tank_topleft.generate_bullet(screen, bullets_topleft, event)
