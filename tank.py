@@ -121,6 +121,9 @@ class Tank(pg.sprite.Sprite):
         """Перерисовываем танк на экране."""
         if self.alive:
             self.screen.blit(self.surf, self.rect)
+            pg.draw.rect(self.screen, (255, 0, 0),
+                      (self.rect.x, self.rect.y, self.WIDTH, self.HEIGHT), 1)
+
 
 class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
@@ -209,7 +212,7 @@ class TankTopLeft(Tank):
     def update(self):
         """Перерисовываем танк на экране."""
         if self.alive:
-
+            pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x, self.rect.y, self.WIDTH, self.HEIGHT), 1)
             if self.direction == 'right':
                 self.HEIGHT = 39
                 self.WIDTH = 35
