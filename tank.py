@@ -13,7 +13,7 @@ class Bullet(pg.sprite.Sprite):
         """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
         self.screen = screen
-        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 12, 2)
+        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 7, 7)
         self.color = (255, 0, 0)
 
         #Направления выстрела = направление танка
@@ -56,8 +56,8 @@ class Tank(pg.sprite.Sprite):
     def __init__(self, screen, x, y):
         super().__init__()
         self.screen = screen
-        self.WIDTH = 20
-        self.HEIGHT = 20
+        self.WIDTH = 35
+        self.HEIGHT = 39
         self.x = x
         self.y = y
         self.rect.x = self.x
@@ -117,18 +117,27 @@ class Tank(pg.sprite.Sprite):
                 # Удаляем коробку, если она потеряла всем хп
                 if box.hp == 0:
                     boxes.remove(box)
-
     def update(self):
         """Перерисовываем танк на экране."""
         if self.alive:
             self.screen.blit(self.surf, self.rect)
+            pg.draw.rect(self.screen, (255, 0, 0),
+                      (self.rect.x, self.rect.y, self.WIDTH, self.HEIGHT), 1)
+
 
 class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
 
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank1.png')
+        self.surf = pg.image.load('images/tank1_down.png')
         self.rect = self.surf.get_rect()
+
+        # Загружаем текстуры для каждого из направлений
+        self.image_down = pg.image.load('images/tank1_down.png')
+        self.image_right = pg.image.load('images/tank1_right.png')
+        self.image_left = pg.image.load('images/tank1_left.png')
+        self.image_up = pg.image.load('images/tank1_up.png')
+
         super().__init__(screen, x, y)
         self.rect.x = self.x
         self.rect.y = self.y
@@ -140,20 +149,24 @@ class TankTopLeft(Tank):
         self.last_shot = pygame.time.get_ticks() - self.shot_delay
 
     def move(self, keys, boxes):
-        """Танк перемещается в одном их 4х направлений."""
+        """Танк перемещается в одном из 4х направлений."""
 
         # Если танк мертв, то двигаться он не может.
         if not (self.alive): return 0
 
         if keys[pg.K_d]:
             self.direction = 'right'
-            if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+            self.HEIGHT = 35
+            self.WIDTH = 39
+            if (self.x < 765 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
 
         elif keys[pg.K_a]:
             self.direction = 'left'
+            self.HEIGHT = 35
+            self.WIDTH = 39
             if (self.x > 0 and all((not(x <= self.x <= x + 40)) or ((x <= self.x <= x + 40
                 and (not(y < self.y + self.HEIGHT < y + 40))) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
@@ -161,13 +174,17 @@ class TankTopLeft(Tank):
 
         elif keys[pg.K_s]:
             self.direction = 'down'
-            if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+            self.HEIGHT = 39
+            self.WIDTH = 35
+            if (self.y < 565 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
 
         elif keys[pg.K_w]:
             self.direction = 'up'
+            self.HEIGHT = 39
+            self.WIDTH = 35
             if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
                 and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates)):
@@ -178,7 +195,7 @@ class TankTopLeft(Tank):
 
     def generate_bullet(self, screen, bullets_topleft, event):
         """
-        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
+        Каждый раз когда танк стреляет, то создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
         Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.draw_bullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """
@@ -192,11 +209,42 @@ class TankTopLeft(Tank):
             bullet = Bullet(screen, self)
             bullets_topleft.add(bullet)
 
+    def update(self):
+        """Перерисовываем танк на экране."""
+        if self.alive:
+
+            if self.direction == 'right':
+                self.HEIGHT = 39
+                self.WIDTH = 35
+                self.screen.blit(self.image_right, self.rect)
+
+            elif self.direction == 'down':
+                self.HEIGHT = 35
+                self.WIDTH = 39
+                self.screen.blit(self.image_down, self.rect)
+
+            elif self.direction == 'left':
+                self.HEIGHT = 39
+                self.WIDTH = 35
+                self.screen.blit(self.image_left, self.rect)
+
+            elif self.direction == 'up':
+                self.HEIGHT = 35
+                self.WIDTH = 39
+                self.screen.blit(self.image_up, self.rect)
+
 class TankBottomRight(Tank):
     """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол."""
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank2.png')
+        self.surf = pg.image.load('images/tank2_right.png')
         self.rect = self.surf.get_rect()
+
+        # Загружаем текстуры танка для каждого направления
+        self.image_right = pg.image.load('images/tank2_right.png')
+        self.image_left = pg.image.load('images/tank2_left.png')
+        self.image_up = pg.image.load('images/tank2_up.png')
+        self.image_down = pg.image.load('images/tank2_down.png')
+
         super().__init__(screen, x, y)
         self.rect.x = self.x
         self.rect.y = self.y
@@ -215,13 +263,17 @@ class TankBottomRight(Tank):
 
         if keys[pg.K_RIGHT]:
             self.direction = 'right'
-            if (self.x < 800 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+            self.HEIGHT = 35
+            self.WIDTH = 39
+            if (self.x < 765 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not (y < self.y + self.HEIGHT < y + 40)) and (not (y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
 
         elif keys[pg.K_LEFT]:
             self.direction = 'left'
+            self.HEIGHT = 35
+            self.WIDTH = 39
             if (self.x > 0 and all((not (x <= self.x <= x + 40)) or ((x <= self.x <= x + 40 and
                   (not (y < self.y + self.HEIGHT < y + 40))) and (not (y < self.y < y + 40)))
                                    for x, y in self.boxes_coordinates)):
@@ -229,13 +281,17 @@ class TankBottomRight(Tank):
 
         elif keys[pg.K_DOWN]:
             self.direction = 'down'
-            if (self.y < 600 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+            self.HEIGHT = 39
+            self.WIDTH = 35
+            if (self.y < 565 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                     and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
 
         elif keys[pg.K_UP]:
             self.direction = 'up'
+            self.HEIGHT = 39
+            self.WIDTH = 35
             if (self.y > 0 and all((not (y <= self.y <= y + 40)) or (y <= self.y <= y + 40 and
                 (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates)):
@@ -259,3 +315,19 @@ class TankBottomRight(Tank):
             self.last_shot = now
             bullet = Bullet(screen, self)
             bullets_bottomright.add(bullet)
+
+    def update(self):
+        """Перерисовываем танк на экране."""
+        if self.alive:
+
+            if self.direction == 'right':
+                self.screen.blit(self.image_right, self.rect)
+
+            elif self.direction == 'down':
+                self.screen.blit(self.image_down, self.rect)
+
+            elif self.direction == 'left':
+                self.screen.blit(self.image_left, self.rect)
+
+            elif self.direction == 'up':
+                self.screen.blit(self.image_up, self.rect)

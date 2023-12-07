@@ -143,5 +143,35 @@ class EscapeMenu:
                 menu.is_opened = True
                 self.is_opened = False
 
+class VictoryMenu:
+
+    def __init__(self, screen):
+        self.screen = screen
+        self.is_openned = False
+        self.font = pygame.font.Font(None, 100)
+        self.font_color = (255, 255, 255)
+
+    def draw(self, tank_topleft, tank_bottom_right):
+
+        if tank_bottom_right.alive == False and tank_topleft.alive == True:
+
+            text = self.font.render("Победа Русских!", True, self.font_color)
+            self.is_openned = True
+
+        elif tank_bottom_right.alive == True and tank_topleft.alive == False:
+
+            text = self.font.render("Victory of the USA!", True, self.font_color)
+            self.is_openned = True
+
+        if self.is_openned: self.screen.blit(text, (125, 250))
+
+
+
+
+
+
+
+
+
 
 
