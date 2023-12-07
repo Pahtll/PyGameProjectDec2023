@@ -59,7 +59,7 @@ while running:
     if main_menu.is_opened == False:
         # Постоянное отображение заднего фона игры
         screen.blit(background, (0, 0))
-
+        print(tank_topleft.x, tank_topleft.y)
         # Создание поля из коробок каждый раз по новой
         field_of_boxes.duplicate_screen(screen)
 
