@@ -59,7 +59,7 @@ while running:
     if main_menu.is_opened == False:
         # Постоянное отображение заднего фона игры
         screen.blit(background, (0, 0))
-
+        print(tank_topleft.x, tank_topleft.y)
         # Создание поля из коробок каждый раз по новой
         field_of_boxes.duplicate_screen(screen)
 
@@ -108,7 +108,7 @@ while running:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     tank_topleft.generate_bullet(screen, bullets_topleft, event)
-                if event.key == pg.K_RCTRL:
+                if event.key == pg.K_RALT:
                     tank_bottomright.generate_bullet(screen, bullets_bottomright, event)
 
         elif main_menu.is_opened:
