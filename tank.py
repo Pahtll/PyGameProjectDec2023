@@ -117,13 +117,6 @@ class Tank(pg.sprite.Sprite):
                 # Удаляем коробку, если она потеряла всем хп
                 if box.hp == 0:
                     boxes.remove(box)
-    def update(self):
-        """Перерисовываем танк на экране."""
-        if self.alive:
-            self.screen.blit(self.surf, self.rect)
-            pg.draw.rect(self.screen, (255, 0, 0),
-                      (self.rect.x, self.rect.y, self.WIDTH, self.HEIGHT), 1)
-
 
 class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
