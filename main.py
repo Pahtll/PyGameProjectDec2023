@@ -24,11 +24,6 @@ main_menu = menu.MainMenu(screen)
 # Задний фон для игры
 background = background.create_background()
 
-
-# Тестовое создание танка
-tank_topleft = tank.TankTopLeft(screen, 0, 0)
-tank_bottomright = tank.TankBottomRight(screen, 764, 558)
-
 # Установка сложности игры // Оставляйте 1 пока что
 controls.set_difficulty(1)
 
@@ -66,7 +61,6 @@ while running:
         # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
         tank_topleft.shot(bullets_topleft, boxes, tank_bottomright)
         tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft)
-
 
         # Отображение спрайта танка
         tank_topleft.update()
@@ -113,10 +107,11 @@ while running:
 
         elif main_menu.is_opened:
             # Если нажата кнопка выхода из игры, то программа должна завершиться.
-           running = main_menu.update(event)
+            running = main_menu.update(event)
 
         if event.type == pg.QUIT:
             running = False
             pg.quit()
+
 # Закрываем игру
 pg.quit()

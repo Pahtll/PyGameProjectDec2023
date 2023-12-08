@@ -165,13 +165,3 @@ class VictoryMenu:
 
         if self.is_openned: self.screen.blit(text, (125, 250))
 
-
-
-
-
-
-
-
-
-
-
