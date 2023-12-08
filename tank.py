@@ -128,6 +128,8 @@ class TankTopLeft(Tank):
 
     def __init__(self, screen, x, y):
         self.surf = pg.image.load('images/tank1.png')
+        self.surf = pg.Surface((20, 20))
+        self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
         super().__init__(screen, x, y)
         self.rect.x = self.x
@@ -145,9 +147,11 @@ class TankTopLeft(Tank):
         # Если танк мертв, то двигаться он не может.
         if not (self.alive): return 0
 
+        communication = pg.sprite.spritecollide(self, boxes, False)
+
         if keys[pg.K_d]:
             self.direction = 'right'
-            if (self.x < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+            if (self.x + self.WIDTH < 800 and all((not(x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not(y < self.y + self.HEIGHT < y + 40)) and (not(y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
@@ -161,7 +165,7 @@ class TankTopLeft(Tank):
 
         elif keys[pg.K_s]:
             self.direction = 'down'
-            if (self.y < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+            if (self.y + self.HEIGHT < 600 and all((not(y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not(x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
@@ -215,7 +219,7 @@ class TankBottomRight(Tank):
 
         if keys[pg.K_RIGHT]:
             self.direction = 'right'
-            if (self.x < 800 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
+            if (self.x + self.WIDTH < 800 and all((not (x <= self.x + self.WIDTH <= x + 40)) or ((x <= self.x + self.WIDTH <= x + 40)
                 and (not (y < self.y + self.HEIGHT < y + 40)) and (not (y < self.y < y + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.x += self.speed
@@ -229,7 +233,7 @@ class TankBottomRight(Tank):
 
         elif keys[pg.K_DOWN]:
             self.direction = 'down'
-            if (self.y < 600 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
+            if (self.y + self.HEIGHT < 600 and all((not (y <= self.y + self.HEIGHT <= y + 40)) or (y <= self.y + self.HEIGHT <= y + 40
                     and (not (x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                      for x, y in self.boxes_coordinates)):
                 self.y += self.speed
