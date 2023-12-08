@@ -154,6 +154,8 @@ class TankTopLeft(Tank):
         # Если танк мертв, то двигаться он не может.
         if not (self.alive): return 0
 
+        communication = pg.sprite.spritecollide(self, boxes, False)
+
         if keys[pg.K_d]:
             self.direction = 'right'
             self.HEIGHT = 35
