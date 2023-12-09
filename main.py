@@ -15,7 +15,7 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('bro, tanki')
 
 # Иконка для приложения
-icon = pg.image.load('images/icon.png')
+icon = pg.image.load('images/tank1_up.png')
 pg.display.set_icon(icon)
 
 #Главное меню
