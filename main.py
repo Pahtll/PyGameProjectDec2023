@@ -85,8 +85,8 @@ while running:
                 bullets_bottomright.update(tank_bottomright)
 
                 # Передвижение танка
-                tank_topleft.move(keys_get_pressed, boxes)
-                tank_bottomright.move(keys_get_pressed, boxes)
+                tank_topleft.move(keys_get_pressed, boxes, tank_bottomright)
+                tank_bottomright.move(keys_get_pressed, boxes, tank_topleft)
 
     elif main_menu.is_opened:
         main_menu.draw()
