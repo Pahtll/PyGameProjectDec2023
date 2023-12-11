@@ -196,7 +196,6 @@ class TankTopLeft(Tank):
             self.direction = 'up'
             self.HEIGHT = 39
             self.WIDTH = 35
-            print(communication_tank)
             if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates) and
