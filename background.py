@@ -10,7 +10,7 @@ def create_background():
     if 5 < randomNumber <= 10:
         background = pg.image.load("images/background2.png")
 
-    elif 0 < randomNumber <= 5:
+    elif 0 <= randomNumber <= 5:
         background = pg.image.load("images/background.png")
 
     return background

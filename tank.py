@@ -242,7 +242,7 @@ class TankTopLeft(Tank):
                 self.screen.blit(self.image_up, self.rect)
 
 class TankBottomRight(Tank):
-    """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол."""
+    """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол.)"""
     def __init__(self, screen, x, y):
         self.surf = pg.image.load('images/tank2_right.png')
         self.rect = self.surf.get_rect()
@@ -330,7 +330,7 @@ class TankBottomRight(Tank):
 
     def generate_bullet(self, screen, bullets_bottomright, event):
         """
-        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
+        Каждый раз когда танк стреляет, то создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
         Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """
