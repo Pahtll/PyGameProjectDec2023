@@ -1,7 +1,7 @@
 """Создание пуль, танков"""
 import pygame as pg
 import pygame.sprite
-import field
+import field, copter
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
@@ -68,7 +68,15 @@ class Tank(pg.sprite.Sprite):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
 
-    def shot(self, bullets, boxes, other_tank):
+    def is_alive(self):
+
+        if self.hp > 0:
+            self.alive = True
+
+        else:
+            self.alive = False
+
+    def shot(self, bullets, boxes, other_tank, copters):
         """
         В первом цикле мы берем по пуле из группы спрайтов пуль. Каждая пуля - экземлпяр класса Bullet().
         Далее отрисовываем каждую пулю.
@@ -96,11 +104,16 @@ class Tank(pg.sprite.Sprite):
         if other_tank.alive:
 
             # Проверяет, касается ли пуля другого танка.
-            hit = pygame.sprite.spritecollide(other_tank, bullets, True)
-            if hit:
+            hitTank = pygame.sprite.spritecollide(other_tank, bullets, True)
+
+            for copter_object in copters:
+                hitCopter = pygame.sprite.spritecollide(copter_object, bullets, True)
+
+                if hitCopter:
+                    copter_object.hp -= bullet.damage
+
+            if hitTank:
                 other_tank.hp -= bullet.damage
-                if other_tank.hp <= 0:
-                    other_tank.alive = False
 
         # Берём по коробке из группы спрайтов коробок. Для проверки
         for box in boxes.sprites():
@@ -115,6 +128,8 @@ class Tank(pg.sprite.Sprite):
                 # Удаляем коробку, если она потеряла всем хп
                 if box.hp == 0:
                     boxes.remove(box)
+                    if box.is_copter_inside:
+                        copters.add(copter.Copter(self.screen, box.x, box.y))
 
 class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
@@ -196,7 +211,6 @@ class TankTopLeft(Tank):
             self.direction = 'up'
             self.HEIGHT = 39
             self.WIDTH = 35
-            print(communication_tank)
             if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates) and

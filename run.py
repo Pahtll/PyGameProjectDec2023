@@ -3,7 +3,6 @@ from pygame.sprite import Group
 from escape import EscapeMenu
 import background, menu, controls, tank, field
 
-
 # Запуск программы
 pg.init()
 
@@ -17,25 +16,28 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('bro, tanki')
 
 # Иконка для приложения
-icon = pg.image.load('images/icon.png')
+icon = pg.image.load('images/tank1_up.png')
 pg.display.set_icon(icon)
 
 # Главное меню
 main_menu = menu.MainMenu(screen)
 
-# Задний фон для игры
-background = background.create_background()
 
 # Установка сложности игры // Оставляйте 1 пока что
-controls.set_difficulty(1)
-
 
 def RunGame():
+    controls.set_difficulty("test")
+    # Задний фон для игры
+    background_image = background.create_background()
+
     # Пули от танка
     bullets_topleft = Group()
     bullets_bottomright = Group()
+
     # Генерация коробок
     boxes = Group()
+    copters = Group()
+
     # Создание танков
     tank_topleft = tank.TankTopLeft(screen, 0, 0)
     tank_bottomright = tank.TankBottomRight(screen, 764, 558)
@@ -48,6 +50,9 @@ def RunGame():
     escape_menu = EscapeMenu(screen)
     victory_menu = menu.VictoryMenu(screen)
 
+    # Эта переменная отвечает за то, какой кадр будет использоваться в анимации коптера
+    copter_image_index = 0
+
     running = True
     while running:
         # Количество фпс
@@ -55,14 +60,16 @@ def RunGame():
 
         if main_menu.is_opened == False:
             # Постоянное отображение заднего фона игры
-            screen.blit(background, (0, 0))
+            screen.blit(background_image, (0, 0))
 
             # Создание поля из коробок каждый раз по новой
             field_of_boxes.duplicate_screen(screen)
 
             # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
-            tank_topleft.shot(bullets_topleft, boxes, tank_bottomright)
-            tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft)
+            tank_topleft.shot(bullets_topleft, boxes, tank_bottomright, copters)
+            tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft, copters)
+            tank_topleft.is_alive()
+            tank_bottomright.is_alive()
 
             # Отображение спрайта танка
             tank_topleft.update()
@@ -79,9 +86,23 @@ def RunGame():
             # Отрисовка меню, открываемое на кнопку "esc"
             escape_menu.draw()
 
-            if escape_menu.is_opened == False:
+            for copter_object in copters:
+
+                if copter_image_index > len(copter_object.images) - 1:
+                    copter_image_index = 0
+
+                if not escape_menu.is_opened and not victory_menu.is_openned:
+                    copter_object.attack(tank_topleft, tank_bottomright)
+
+                else:
+                    copter_image_index = 0
+                copter_object.die(copters)
+                copter_object.draw(copter_image_index)
+
+            if not escape_menu.is_opened:
+
                 victory_menu.draw(tank_topleft, tank_bottomright)
-                if victory_menu.is_openned == False:
+                if not victory_menu.is_openned:
                     """Сюда пишутся все события, которые не должны происходить, когда открывается меню."""
                     # Передаётся класс tank_topleft для понимания направления танка и корректировки относительно его направления пуль
                     bullets_topleft.update(tank_topleft)
@@ -94,6 +115,7 @@ def RunGame():
         elif main_menu.is_opened:
             main_menu.draw()
 
+        copter_image_index += 1
         # Обновление экрана
         pg.display.update()
 
