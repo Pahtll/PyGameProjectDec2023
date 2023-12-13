@@ -24,6 +24,7 @@ def set_difficulty(range):
             copter.Copter.damage = 2
             copter.Copter.hp = 50
 
+
         case 2:
             tank.Tank.speed = 2
             tank.Tank.hp = 300
@@ -31,6 +32,7 @@ def set_difficulty(range):
             tank.Bullet.damage = 50
             tank.Bullet.speed = 10
             field.Box.hp = 200
+            field.Box.copter_chance = 0.5  # 50%
             copter.Copter.speed = 2
             copter.Copter.damage = 3
             copter.Copter.hp = 100
@@ -41,6 +43,7 @@ def set_difficulty(range):
             tank.Bullet.damage = 40
             tank.Bullet.speed = 10
             field.Box.hp = 200
+            field.Box.copter_chance = 0.75  # 75%
             copter.Copter.speed = 3
             copter.Copter.damage = 5
             copter.Copter.hp = 100
@@ -52,6 +55,7 @@ def set_difficulty(range):
             tank.Bullet.damage = 40
             tank.Bullet.speed = 10
             field.Box.hp = 40
+            field.Box.copter_chance = 1  # 100%
             copter.Copter.speed = 2
             copter.Copter.damage = 5
             copter.Copter.hp = 100
