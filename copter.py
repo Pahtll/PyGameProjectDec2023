@@ -17,7 +17,6 @@ class Copter(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.rect = pg.Rect(x, y, 30, 30)
-        self.state = True
         # Список со всеми текстурами который нужен для анимаций.
         self.images = [pg.image.load('images/copter/dronchik.png'), pg.image.load('images/copter/dronchik.png'),
                        pg.image.load('images/copter/dronchik.png'), pg.image.load('images/copter/dronchik.png'),

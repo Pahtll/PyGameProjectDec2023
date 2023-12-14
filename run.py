@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.sprite import Group
 from escape import EscapeMenu
-import background, menu, controls, tank, field
+import background, menu, controls, tank, field, animations
 
 # Запуск программы
 pg.init()
@@ -22,11 +22,10 @@ pg.display.set_icon(icon)
 # Главное меню
 main_menu = menu.MainMenu(screen)
 
-
 # Установка сложности игры // Оставляйте 1 пока что
 
 def RunGame():
-    controls.set_difficulty("test")
+    controls.set_difficulty('test')
     # Задний фон для игры
     background_image = background.create_background()
 
@@ -42,6 +41,9 @@ def RunGame():
     tank_topleft = tank.TankTopLeft(screen, 0, 0)
     tank_bottomright = tank.TankBottomRight(screen, 764, 558)
 
+    #Создание экземпляра класса взрыв
+    explosion = animations.Explosion()
+
     # Создание поля. Генерация случайного поля, которое будет использоваться до конца игры.
     field_of_boxes = field.Field(boxes)
     field_of_boxes.generate((10, 30), (1, 10))
@@ -52,13 +54,13 @@ def RunGame():
 
     # Эта переменная отвечает за то, какой кадр будет использоваться в анимации коптера
     copter_image_index = 0
-
     running = True
     while running:
         # Количество фпс
         clock.tick(FPS)
 
         if main_menu.is_opened == False:
+
             # Постоянное отображение заднего фона игры
             screen.blit(background_image, (0, 0))
 
@@ -68,8 +70,8 @@ def RunGame():
             # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
             tank_topleft.shot(bullets_topleft, boxes, tank_bottomright, copters)
             tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft, copters)
-            tank_topleft.is_alive()
-            tank_bottomright.is_alive()
+            tank_topleft.is_alive(explosion)
+            tank_bottomright.is_alive(explosion)
 
             # Отображение спрайта танка
             tank_topleft.update()
