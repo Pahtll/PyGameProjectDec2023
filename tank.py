@@ -128,7 +128,7 @@ class Tank(pg.sprite.Sprite):
                 box.hp -= bullet.damage
 
                 # Удаляем коробку, если она потеряла всем хп
-                if box.hp == 0:
+                if box.hp <= 0:
                     boxes.remove(box)
                     if box.is_copter_inside:
                         copters.add(copter.Copter(self.screen, box.x, box.y))

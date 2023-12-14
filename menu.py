@@ -116,11 +116,17 @@ class VictoryMenu:
 
             text = self.font.render("Победа Русских!", True, self.font_color)
             self.is_openned = True
+            if self.is_openned: self.screen.blit(text, (125, 250))
 
         elif tank_bottom_right.alive == True and tank_topleft.alive == False:
 
             text = self.font.render("Victory of the USA!", True, self.font_color)
             self.is_openned = True
+            if self.is_openned: self.screen.blit(text, (80, 250))
 
-        if self.is_openned: self.screen.blit(text, (125, 250))
+        elif tank_bottom_right.alive == False and tank_topleft.alive == False:
+
+            text = self.font.render("Ничья", True, self.font_color)
+            self.is_openned = True
+            if self.is_openned: self.screen.blit(text, (300, 250))
 

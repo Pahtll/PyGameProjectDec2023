@@ -85,8 +85,6 @@ def RunGame():
             # Нажимаемые клавиши, переменная position для сохранения позиции
             keys_get_pressed = pg.key.get_pressed()
 
-            # Отрисовка меню, открываемое на кнопку "esc"
-            escape_menu.draw()
 
             for copter_object in copters:
 
@@ -118,6 +116,10 @@ def RunGame():
             main_menu.draw()
 
         copter_image_index += 1
+
+        # Отрисовка меню, открываемое на кнопку "esc"
+        escape_menu.draw()
+
         # Обновление экрана
         pg.display.update()
 
