@@ -6,7 +6,7 @@ import background, menu, controls, tank, field, animations
 # Запуск программы
 pg.init()
 
-# Создание экземлпяра класса Clock() для последующего указания количества кадров в секунду
+# Создание экземпляра класса Clock() для последующего указания количества кадров в секунду
 clock = pg.time.Clock()
 
 # Для упрощения работы в дальнейшем оформил в качестве двух отдельных констант
@@ -16,7 +16,7 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('bro, tanki')
 
 # Иконка для приложения
-icon = pg.image.load('images/tank1_up.png')
+icon = pg.image.load('images/tank_topleft/tank1_up.png')
 pg.display.set_icon(icon)
 
 # Главное меню
@@ -125,7 +125,7 @@ def RunGame():
 
         for event in pg.event.get():
 
-            if main_menu.is_opened == False:
+            if not main_menu.is_opened:
 
                 escape_menu.open(event, main_menu)
                 if event.type == pg.KEYDOWN:

@@ -14,7 +14,7 @@ class Box(pgsp.Sprite):
         self.coordinates = coordinates
         self.x = coordinates[0]
         self.y = coordinates[1]
-        self.texture = pg.image.load('images/box1.png')
+        self.texture = pg.image.load('images/boxes/box1.png')
         self.rect = self.texture.get_rect()
         # Передаем два нижних атрибута, чтобы rect понимал размеры коробки и обрабатывал её хитбокс
         self.rect.x = self.coordinates[0]

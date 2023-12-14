@@ -77,7 +77,7 @@ class MainMenu:
     """Главное меню, из которого происходит вход в игру и выход из неё."""
     def __init__(self, screen):
         self.screen = screen
-        self.background = pg.image.load('images/menuBG.png')
+        self.background = pg.image.load('images/backgrounds/menuBG.png')
         self.button_start = Button(screen, 200, 250, 70, "Начать игру")
         self.button_exit = Button(screen, 300, 250, 70, "Выйти из игры")
         self.is_opened = True

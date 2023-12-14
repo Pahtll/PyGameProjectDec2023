@@ -13,14 +13,19 @@ class Bullet(pg.sprite.Sprite):
         """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
         self.screen = screen
-        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 7, 7)
+        images = {'right': pg.image.load('images/bullet/bullet_right.png'),
+                      'left': pg.image.load('images/bullet/bullet_left.png'),
+                      'up': pg.image.load('images/bullet/bullet_up.png'),
+                      'down': pg.image.load('images/bullet/bullet_down.png')}
+        self.image = images[tank.direction]
+        self.rect = self.image.get_rect()
         self.color = (255, 0, 0)
 
         #Направления выстрела = направление танка
         self.direction = tank.direction
 
         #Координаты центра пули = координатам центра танка
-        self.rect.center = tank.rect.center
+        self.rect.center = (tank.rect.centerx - 4, tank.rect.centery - 7)
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
@@ -44,7 +49,7 @@ class Bullet(pg.sprite.Sprite):
 
     def draw_bullet(self):
         """Отрисовка пули. Пока что пуля это тупо красный шарик"""
-        pg.draw.circle(self.screen, self.color, self.rect.center, 7)
+        self.screen.blit(self.image, self.rect.center)
 
 class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
@@ -137,14 +142,14 @@ class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
 
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank1_down.png')
+        self.surf = pg.image.load('images/tank_topleft/tank1_down.png')
         self.rect = self.surf.get_rect()
 
         # Загружаем текстуры для каждого из направлений
-        self.image_down = pg.image.load('images/tank1_down.png')
-        self.image_right = pg.image.load('images/tank1_right.png')
-        self.image_left = pg.image.load('images/tank1_left.png')
-        self.image_up = pg.image.load('images/tank1_up.png')
+        self.image_down = pg.image.load('images/tank_topleft/tank1_down.png')
+        self.image_right = pg.image.load('images/tank_topleft/tank1_right.png')
+        self.image_left = pg.image.load('images/tank_topleft/tank1_left.png')
+        self.image_up = pg.image.load('images/tank_topleft/tank1_up.png')
 
         super().__init__(screen, x, y)
         self.rect.x = self.x
@@ -260,14 +265,14 @@ class TankTopLeft(Tank):
 class TankBottomRight(Tank):
     """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол.)"""
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank2_right.png')
+        self.surf = pg.image.load('images/tank_bottomright/tank2_right.png')
         self.rect = self.surf.get_rect()
 
         # Загружаем текстуры танка для каждого направления
-        self.image_right = pg.image.load('images/tank2_right.png')
-        self.image_left = pg.image.load('images/tank2_left.png')
-        self.image_up = pg.image.load('images/tank2_up.png')
-        self.image_down = pg.image.load('images/tank2_down.png')
+        self.image_right = pg.image.load('images/tank_bottomright/tank2_right.png')
+        self.image_left = pg.image.load('images/tank_bottomright/tank2_left.png')
+        self.image_up = pg.image.load('images/tank_bottomright/tank2_up.png')
+        self.image_down = pg.image.load('images/tank_bottomright/tank2_down.png')
 
         super().__init__(screen, x, y)
         self.rect.x = self.x
