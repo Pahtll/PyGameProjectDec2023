@@ -1,7 +1,7 @@
 """Создание пуль, танков"""
 import pygame as pg
 import pygame.sprite
-import field, copter
+import field, copter, animations
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
@@ -68,13 +68,15 @@ class Tank(pg.sprite.Sprite):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
 
-    def is_alive(self):
+    def is_alive(self, explosion):
 
         if self.hp > 0:
             self.alive = True
 
         else:
+            explosion.boom(self.screen, self.rect.centerx, self.rect.centery)
             self.alive = False
+
 
     def shot(self, bullets, boxes, other_tank, copters):
         """
