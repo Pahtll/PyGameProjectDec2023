@@ -22,6 +22,7 @@ pg.display.set_icon(icon)
 # Главное меню
 main_menu = menu.MainMenu(screen)
 
+
 # Установка сложности игры // Оставляйте 1 пока что
 
 def RunGame():
@@ -41,7 +42,7 @@ def RunGame():
     tank_topleft = tank.TankTopLeft(screen, 0, 0)
     tank_bottomright = tank.TankBottomRight(screen, 764, 558)
 
-    #Создание экземпляра класса взрыв
+    # Создание экземпляра класса взрыв
     explosion = animations.Explosion()
 
     # Создание поля. Генерация случайного поля, которое будет использоваться до конца игры.
@@ -59,7 +60,7 @@ def RunGame():
         # Количество фпс
         clock.tick(FPS)
 
-        if main_menu.is_opened == False:
+        if not main_menu.is_opened:
 
             # Постоянное отображение заднего фона игры
             screen.blit(background_image, (0, 0))
@@ -84,7 +85,6 @@ def RunGame():
 
             # Нажимаемые клавиши, переменная position для сохранения позиции
             keys_get_pressed = pg.key.get_pressed()
-
 
             for copter_object in copters:
 
