@@ -173,8 +173,6 @@ class TankTopLeft(Tank):
 
         communication_tank = pg.sprite.collide_rect(self, tank_bottomright)
 
-        # Заметки для себя: это не коллизия.
-
         if keys[pg.K_d]:
             self.direction = 'right'
             self.HEIGHT = 35
