@@ -8,9 +8,9 @@ def create_background():
     randomNumber = random.randint(0, 10)
 
     if 5 < randomNumber <= 10:
-        background = pg.image.load("images/background2.png")
+        background = pg.image.load("images/backgrounds/background2.png")
 
     elif 0 <= randomNumber <= 5:
-        background = pg.image.load("images/background.png")
+        background = pg.image.load("images/backgrounds/background.png")
 
     return background

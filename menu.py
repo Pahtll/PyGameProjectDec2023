@@ -77,7 +77,7 @@ class MainMenu:
     """Главное меню, из которого происходит вход в игру и выход из неё."""
     def __init__(self, screen):
         self.screen = screen
-        self.background = pg.image.load('images/menuBG.png')
+        self.background = pg.image.load('images/backgrounds/menuBG.png')
         self.button_start = Button(screen, 200, 250, 70, "Начать игру")
         self.button_exit = Button(screen, 300, 250, 70, "Выйти из игры")
         self.is_opened = True
@@ -116,11 +116,17 @@ class VictoryMenu:
 
             text = self.font.render("Победа Русских!", True, self.font_color)
             self.is_openned = True
+            if self.is_openned: self.screen.blit(text, (125, 250))
 
         elif tank_bottom_right.alive == True and tank_topleft.alive == False:
 
             text = self.font.render("Victory of the USA!", True, self.font_color)
             self.is_openned = True
+            if self.is_openned: self.screen.blit(text, (80, 250))
 
-        if self.is_openned: self.screen.blit(text, (125, 250))
+        elif tank_bottom_right.alive == False and tank_topleft.alive == False:
+
+            text = self.font.render("Ничья", True, self.font_color)
+            self.is_openned = True
+            if self.is_openned: self.screen.blit(text, (300, 250))
 

@@ -6,7 +6,7 @@ import background, menu, controls, tank, field, animations
 # Запуск программы
 pg.init()
 
-# Создание экземлпяра класса Clock() для последующего указания количества кадров в секунду
+# Создание экземпляра класса Clock() для последующего указания количества кадров в секунду
 clock = pg.time.Clock()
 
 # Для упрощения работы в дальнейшем оформил в качестве двух отдельных констант
@@ -16,11 +16,12 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('bro, tanki')
 
 # Иконка для приложения
-icon = pg.image.load('images/tank1_up.png')
+icon = pg.image.load('images/tank_topleft/tank1_up.png')
 pg.display.set_icon(icon)
 
 # Главное меню
 main_menu = menu.MainMenu(screen)
+
 
 # Установка сложности игры // Оставляйте 1 пока что
 
@@ -41,7 +42,7 @@ def RunGame():
     tank_topleft = tank.TankTopLeft(screen, 0, 0)
     tank_bottomright = tank.TankBottomRight(screen, 764, 558)
 
-    #Создание экземпляра класса взрыв
+    # Создание экземпляра класса взрыв
     explosion = animations.Explosion()
 
     # Создание поля. Генерация случайного поля, которое будет использоваться до конца игры.
@@ -59,7 +60,7 @@ def RunGame():
         # Количество фпс
         clock.tick(FPS)
 
-        if main_menu.is_opened == False:
+        if not main_menu.is_opened:
 
             # Постоянное отображение заднего фона игры
             screen.blit(background_image, (0, 0))
@@ -84,9 +85,6 @@ def RunGame():
 
             # Нажимаемые клавиши, переменная position для сохранения позиции
             keys_get_pressed = pg.key.get_pressed()
-
-            # Отрисовка меню, открываемое на кнопку "esc"
-            escape_menu.draw()
 
             for copter_object in copters:
 
@@ -118,12 +116,16 @@ def RunGame():
             main_menu.draw()
 
         copter_image_index += 1
+
+        # Отрисовка меню, открываемое на кнопку "esc"
+        escape_menu.draw()
+
         # Обновление экрана
         pg.display.update()
 
         for event in pg.event.get():
 
-            if main_menu.is_opened == False:
+            if not main_menu.is_opened:
 
                 escape_menu.open(event, main_menu)
                 if event.type == pg.KEYDOWN:
