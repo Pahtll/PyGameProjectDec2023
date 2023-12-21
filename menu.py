@@ -2,6 +2,7 @@
 import sys
 import pygame as pg
 import pygame.font
+import csv
 
 
 class Button:
@@ -109,24 +110,30 @@ class VictoryMenu:
         self.is_openned = False
         self.font = pygame.font.Font(None, 100)
         self.font_color = (255, 255, 255)
+        self.victories = list()
 
     def draw(self, tank_topleft, tank_bottom_right):
+        with open('saves.csv') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                self.victories = map(int, row)
+
 
         if tank_bottom_right.alive == False and tank_topleft.alive == True:
 
-            text = self.font.render("Победа Русских!", True, self.font_color)
+            text = self.font.render(f"Победа Русских!\nТекущий счёт: {self.victories[0]} : {self.victories[1]}", True, self.font_color)
             self.is_openned = True
             if self.is_openned: self.screen.blit(text, (125, 250))
 
         elif tank_bottom_right.alive == True and tank_topleft.alive == False:
 
-            text = self.font.render("Victory of the USA!", True, self.font_color)
+            text = self.font.render(f"Victory of the USA!\nТекущий счёт: {self.victories[0]} : {self.victories[1]}", True, self.font_color)
             self.is_openned = True
             if self.is_openned: self.screen.blit(text, (80, 250))
 
         elif tank_bottom_right.alive == False and tank_topleft.alive == False:
 
-            text = self.font.render("Ничья", True, self.font_color)
+            text = self.font.render(f"Ничья\nТекущий счёт: {self.victories[0]} : {self.victories[1]}", True, self.font_color)
             self.is_openned = True
             if self.is_openned: self.screen.blit(text, (300, 250))
 
