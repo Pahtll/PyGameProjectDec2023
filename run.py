@@ -119,7 +119,7 @@ def RunGame():
 
         copter_image_index += 1
         # Обновление экрана
-        pg.display.update()
+        pg.display.flip()
 
         for event in pg.event.get():
 
