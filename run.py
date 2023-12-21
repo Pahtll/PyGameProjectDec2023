@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.sprite import Group
 from escape import EscapeMenu
-import background, menu, controls, tank, field, animations
+import background, menu, controls, tank, field, animations, hp
 
 # Запуск программы
 pg.init()
@@ -22,10 +22,8 @@ pg.display.set_icon(icon)
 # Главное меню
 main_menu = menu.MainMenu(screen)
 
-
-# Установка сложности игры // Оставляйте 1 пока что
-
 def RunGame():
+    # Установка сложности игры // Оставляйте test пока что
     controls.set_difficulty('test')
     # Задний фон для игры
     background_image = background.create_background()
@@ -41,6 +39,10 @@ def RunGame():
     # Создание танков
     tank_topleft = tank.TankTopLeft(screen, 0, 0)
     tank_bottomright = tank.TankBottomRight(screen, 764, 558)
+
+    # Создание плашки хп
+    hp_topleft = hp.Hp(screen, tank_topleft)
+    hp_bottomright = hp.Hp(screen, tank_bottomright)
 
     # Создание экземпляра класса взрыв
     explosion = animations.Explosion()
@@ -69,8 +71,8 @@ def RunGame():
             field_of_boxes.duplicate_screen(screen)
 
             # Объектам tank_topleft и tank_bottomright передаются набор пуль и коробок
-            tank_topleft.shot(bullets_topleft, boxes, tank_bottomright, copters)
-            tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft, copters)
+            tank_topleft.shot(bullets_topleft, boxes, tank_bottomright, copters, hp_bottomright)
+            tank_bottomright.shot(bullets_bottomright, boxes, tank_topleft, copters, hp_topleft)
             tank_topleft.is_alive(explosion)
             tank_bottomright.is_alive(explosion)
 
@@ -78,10 +80,13 @@ def RunGame():
             tank_topleft.update()
             tank_bottomright.update()
 
+            # Отображение плашки на экране
+            hp_topleft.update()
+            hp_bottomright.update()
+
             # Объектам tank_topleft и tank_bottomright передается список [(x, y), (x1, y1), ...] с содержанием координат коробок
             tank_topleft.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
-            tank_bottomright.get_boxes_coordinates(
-                [class_instance.coordinates for class_instance in field_of_boxes.boxes])
+            tank_bottomright.get_boxes_coordinates([class_instance.coordinates for class_instance in field_of_boxes.boxes])
 
             # Нажимаемые клавиши, переменная position для сохранения позиции
             keys_get_pressed = pg.key.get_pressed()
