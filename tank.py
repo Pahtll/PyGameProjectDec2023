@@ -2,6 +2,8 @@
 import pygame as pg
 import pygame.sprite
 import field, copter, animations
+import tank
+
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
@@ -55,7 +57,7 @@ class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
 
     speed = 1
-    hp = 200
+    hp = 560
     shot_delay = 500
 
     def __init__(self, screen, x, y):
@@ -83,7 +85,7 @@ class Tank(pg.sprite.Sprite):
             self.alive = False
 
 
-    def shot(self, bullets, boxes, other_tank, copters):
+    def shot(self, bullets, boxes, other_tank, copters, hp_other_tank):
         """
         В первом цикле мы берем по пуле из группы спрайтов пуль. Каждая пуля - экземлпяр класса Bullet().
         Далее отрисовываем каждую пулю.
@@ -111,16 +113,21 @@ class Tank(pg.sprite.Sprite):
         if other_tank.alive:
 
             # Проверяет, касается ли пуля другого танка.
-            hitTank = pygame.sprite.spritecollide(other_tank, bullets, True)
+            hit_tank = pygame.sprite.spritecollide(other_tank, bullets, True)
 
             for copter_object in copters:
-                hitCopter = pygame.sprite.spritecollide(copter_object, bullets, True)
+                hit_copter = pygame.sprite.spritecollide(copter_object, bullets, True)
 
-                if hitCopter:
+                if hit_copter:
                     copter_object.hp -= bullet.damage
 
-            if hitTank:
+            if hit_tank:
                 other_tank.hp -= bullet.damage
+
+                difference = round(hp_other_tank.green_line.width / (Tank.hp / bullet.damage))
+
+                hp_other_tank.red_line.width += difference
+                hp_other_tank.red_line_diff -= difference
 
         # Берём по коробке из группы спрайтов коробок. Для проверки
         for box in boxes.sprites():
