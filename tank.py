@@ -1,7 +1,7 @@
 """Создание пуль, танков"""
 import pygame as pg
 import pygame.sprite
-import field
+import field, copter, animations
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
@@ -13,14 +13,19 @@ class Bullet(pg.sprite.Sprite):
         """Создаём пулю в позиции танка"""
         super(Bullet, self).__init__()
         self.screen = screen
-        self.rect = pg.Rect(tank.rect.centerx, tank.rect.centery, 7, 7)
+        images = {'right': pg.image.load('images/bullet/bullet_right.png'),
+                      'left': pg.image.load('images/bullet/bullet_left.png'),
+                      'up': pg.image.load('images/bullet/bullet_up.png'),
+                      'down': pg.image.load('images/bullet/bullet_down.png')}
+        self.image = images[tank.direction]
+        self.rect = self.image.get_rect()
         self.color = (255, 0, 0)
 
         #Направления выстрела = направление танка
         self.direction = tank.direction
 
         #Координаты центра пули = координатам центра танка
-        self.rect.center = tank.rect.center
+        self.rect.center = (tank.rect.centerx - 4, tank.rect.centery - 7)
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
@@ -44,7 +49,7 @@ class Bullet(pg.sprite.Sprite):
 
     def draw_bullet(self):
         """Отрисовка пули. Пока что пуля это тупо красный шарик"""
-        pg.draw.circle(self.screen, self.color, self.rect.center, 7)
+        self.screen.blit(self.image, self.rect.center)
 
 class Tank(pg.sprite.Sprite):
     """Выпускаем танк со стонка и отправляем на стартовые координаты"""
@@ -68,7 +73,17 @@ class Tank(pg.sprite.Sprite):
         """Получение координат коробок"""
         self.boxes_coordinates = transferred_boxes_coordinates
 
-    def shot(self, bullets, boxes, other_tank):
+    def is_alive(self, explosion):
+
+        if self.hp > 0:
+            self.alive = True
+
+        else:
+            explosion.boom(self.screen, self.rect.centerx, self.rect.centery)
+            self.alive = False
+
+
+    def shot(self, bullets, boxes, other_tank, copters):
         """
         В первом цикле мы берем по пуле из группы спрайтов пуль. Каждая пуля - экземлпяр класса Bullet().
         Далее отрисовываем каждую пулю.
@@ -96,11 +111,16 @@ class Tank(pg.sprite.Sprite):
         if other_tank.alive:
 
             # Проверяет, касается ли пуля другого танка.
-            hit = pygame.sprite.spritecollide(other_tank, bullets, True)
-            if hit:
+            hitTank = pygame.sprite.spritecollide(other_tank, bullets, True)
+
+            for copter_object in copters:
+                hitCopter = pygame.sprite.spritecollide(copter_object, bullets, True)
+
+                if hitCopter:
+                    copter_object.hp -= bullet.damage
+
+            if hitTank:
                 other_tank.hp -= bullet.damage
-                if other_tank.hp <= 0:
-                    other_tank.alive = False
 
         # Берём по коробке из группы спрайтов коробок. Для проверки
         for box in boxes.sprites():
@@ -113,21 +133,23 @@ class Tank(pg.sprite.Sprite):
                 box.hp -= bullet.damage
 
                 # Удаляем коробку, если она потеряла всем хп
-                if box.hp == 0:
+                if box.hp <= 0:
                     boxes.remove(box)
+                    if box.is_copter_inside:
+                        copters.add(copter.Copter(self.screen, box.x, box.y))
 
 class TankTopLeft(Tank):
     """Отвечает за верхний левый танк (управление на WASD, стрельба не пробел)"""
 
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank1_down.png')
+        self.surf = pg.image.load('images/tank_topleft/tank1_down.png')
         self.rect = self.surf.get_rect()
 
         # Загружаем текстуры для каждого из направлений
-        self.image_down = pg.image.load('images/tank1_down.png')
-        self.image_right = pg.image.load('images/tank1_right.png')
-        self.image_left = pg.image.load('images/tank1_left.png')
-        self.image_up = pg.image.load('images/tank1_up.png')
+        self.image_down = pg.image.load('images/tank_topleft/tank1_down.png')
+        self.image_right = pg.image.load('images/tank_topleft/tank1_right.png')
+        self.image_left = pg.image.load('images/tank_topleft/tank1_left.png')
+        self.image_up = pg.image.load('images/tank_topleft/tank1_up.png')
 
         super().__init__(screen, x, y)
         self.rect.x = self.x
@@ -194,7 +216,6 @@ class TankTopLeft(Tank):
             self.direction = 'up'
             self.HEIGHT = 39
             self.WIDTH = 35
-            print(communication_tank)
             if (self.y > 0 and all((not(y <= self.y <= y + 40)) or (y <= self.y <= y + 40
                 and (not(x < self.x + self.WIDTH < x + 40)) and (not (x < self.x < x + 40)))
                                    for x, y in self.boxes_coordinates) and
@@ -240,16 +261,16 @@ class TankTopLeft(Tank):
                 self.screen.blit(self.image_up, self.rect)
 
 class TankBottomRight(Tank):
-    """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол."""
+    """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол.)"""
     def __init__(self, screen, x, y):
-        self.surf = pg.image.load('images/tank2_right.png')
+        self.surf = pg.image.load('images/tank_bottomright/tank2_right.png')
         self.rect = self.surf.get_rect()
 
         # Загружаем текстуры танка для каждого направления
-        self.image_right = pg.image.load('images/tank2_right.png')
-        self.image_left = pg.image.load('images/tank2_left.png')
-        self.image_up = pg.image.load('images/tank2_up.png')
-        self.image_down = pg.image.load('images/tank2_down.png')
+        self.image_right = pg.image.load('images/tank_bottomright/tank2_right.png')
+        self.image_left = pg.image.load('images/tank_bottomright/tank2_left.png')
+        self.image_up = pg.image.load('images/tank_bottomright/tank2_up.png')
+        self.image_down = pg.image.load('images/tank_bottomright/tank2_down.png')
 
         super().__init__(screen, x, y)
         self.rect.x = self.x
@@ -328,7 +349,7 @@ class TankBottomRight(Tank):
 
     def generate_bullet(self, screen, bullets_bottomright, event):
         """
-        Каждый раз когда танк стреляет создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
+        Каждый раз когда танк стреляет, то создаётся новая пуля. Пули хранятся в специальном списке со спрайтами.
         Мета-инфа: нельзя сюда впихнуть отрисовку пули bullet.drawBullet(), поскольку она в основном цикле while
         идёт после pg.display.update() (ф-ии выполняющей обновление экрана, для перерисовки его полностью)
         """

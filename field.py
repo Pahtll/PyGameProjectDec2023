@@ -7,6 +7,7 @@ class Box(pgsp.Sprite):
     """Коробки - это объекты, из которых строится карта. Их можно разрушить. Они имеют определённое количество hp."""
 
     hp = 150
+    copter_chance = 0
 
     def __init__(self, coordinates):
         """Инициализация коробки"""
@@ -14,11 +15,28 @@ class Box(pgsp.Sprite):
         self.coordinates = coordinates
         self.x = coordinates[0]
         self.y = coordinates[1]
-        self.texture = pg.image.load('images/box1.png')
+        self.texture = pg.image.load('images/boxes/box1.png')
         self.rect = self.texture.get_rect()
         # Передаем два нижних атрибута, чтобы rect понимал размеры коробки и обрабатывал её хитбокс
         self.rect.x = self.coordinates[0]
         self.rect.y = self.coordinates[1]
+
+        match self.copter_chance:
+            case 0.25:
+                if random.randint(1, 4) == 1:
+                    self.is_copter_inside = True
+                else: self.is_copter_inside = False
+            case 0.5:
+                if random.randint(1, 2) == 1:
+                    self.is_copter_inside = True
+                else: self.is_copter_inside = False
+            case 0.75:
+                if random.randint(1, 4) == 1:
+                    self.is_copter_inside = False
+                else: self.is_copter_inside = True
+            case 1:
+                self.is_copter_inside = True
+
 
 class Field:
     """
@@ -103,6 +121,3 @@ class Field:
             # Передаем в параметры ф-ии текстурку и хитбокс
             # Rect - это прямоугольник, который обозначает границы спрайта
             screen.blit(box.texture, box.rect)
-
-
-
