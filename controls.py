@@ -52,8 +52,8 @@ def set_difficulty(range):
             tank.Tank.speed = 3
             tank.Tank.hp = 420
             tank.Tank.shot_delay = 0
-            tank.Bullet.damage = 40
-            tank.Bullet.speed = 10
+            tank.Bullet.damage = 500
+            tank.Bullet.speed = 20
             field.Box.hp = 40
             field.Box.copter_chance = 1  # 100%
             copter.Copter.speed = 2

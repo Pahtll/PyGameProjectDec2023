@@ -11,6 +11,7 @@ class Copter(pygame.sprite.Sprite):
     damage = 0
     speed = 0
     hp = 0
+
     def __init__(self, screen, x, y):
         super(Copter, self).__init__()
         self.screen = screen
@@ -95,11 +96,7 @@ class Copter(pygame.sprite.Sprite):
     def draw(self, image_index):
         self.screen.blit(self.images[image_index], (self.x, self.y))
 
-
-
     def die(self, copters):
 
         if self.hp <= 0:
             copters.remove(self)
-
-
