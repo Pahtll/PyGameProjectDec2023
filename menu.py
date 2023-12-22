@@ -158,7 +158,7 @@ class DifficultyChangeMenu:
         self.back_to_menu = Button(screen, 500, 250, 70, "Назад")
         self.is_opened = False
         self.main_menu_need_to_close = False
-        self.difficluty = 0
+        self.difficulty = 0
 
     def draw(self):
         """Отрисовывает меню, состоящее из кнопок и заднего фона """
@@ -169,16 +169,31 @@ class DifficultyChangeMenu:
             self.back_to_menu.draw()
 
     def update(self, event):
-        """Проверка нажаты ли кнопки """
+        """Проверка нажаты ли кнопки"""
         if self.is_opened:
             self.button_difficulty_1.update(event)
             self.button_difficulty_2.update(event)
             self.button_difficulty_3.update(event)
             self.back_to_menu.update(event)
 
-    def get_difficulty(self):
-        return self.difficluty
+        if self.button_difficulty_1.state == 'pressed':
+            self.is_opened = False
+            self.button_difficulty_1.state = 'normal'
+            self.difficulty = 1
 
+        elif self.button_difficulty_2.state == 'pressed':
+            self.is_opened = False
+            self.button_difficulty_2.state = 'normal'
+            self.difficulty = 2
+
+        elif self.button_difficulty_3.state == 'pressed':
+            self.is_opened = False
+            self.button_difficulty_3.state = 'normal'
+            self.difficulty = 3
+
+    def get_difficulty(self):
+        return self.difficulty
+      
 class StatsMenu():
 
     def __init__(self, screen):
