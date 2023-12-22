@@ -59,6 +59,7 @@ class Tank(pg.sprite.Sprite):
     speed = 1
     hp = 560
     shot_delay = 500
+    killed_drones = 0
 
     def __init__(self, screen, x, y):
         super().__init__()
@@ -119,6 +120,8 @@ class Tank(pg.sprite.Sprite):
 
                 if hit_copter:
                     copter_object.hp -= bullet.damage
+                    if copter_object.hp == 0:
+                        self.killed_drones += 1
 
             # Проверяет, касается ли пуля другого танка.
             hit_tank = pygame.sprite.spritecollide(other_tank, bullets, True)
@@ -269,6 +272,7 @@ class TankTopLeft(Tank):
 
 class TankBottomRight(Tank):
     """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол.)"""
+
     def __init__(self, screen, x, y):
         self.surf = pg.image.load('images/tank_bottomright/tank2_right.png')
         self.rect = self.surf.get_rect()

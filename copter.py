@@ -92,9 +92,10 @@ class Copter(pygame.sprite.Sprite):
 
             else:
                 target.hp -= self.damage
-                difference = (target.hp_line.green_line.width * (1 - (target.hp / tank.Tank.hp))) - target.hp_line.red_line.width
-                target.hp_line.red_line.width += difference
+                difference = round((target.hp_line.green_line.width * (1 - (target.hp / tank.Tank.hp))) - target.hp_line.red_line.width)
                 target.hp_line.red_line_diff -= difference
+                target.hp_line.red_line.width += difference
+
 
     def draw(self, image_index):
         self.screen.blit(self.images[image_index], (self.x, self.y))
