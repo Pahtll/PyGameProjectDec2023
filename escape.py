@@ -47,4 +47,4 @@ class EscapeMenu:
                 menu.is_opened = True
                 self.is_opened = False
                 # Запускает процесс перезагрузки.
-                run.RunGame()
+                run.run_game()
