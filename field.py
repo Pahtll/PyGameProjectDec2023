@@ -7,7 +7,6 @@ class Box(pgsp.Sprite):
     """Коробки - это объекты, из которых строится карта. Их можно разрушить. Они имеют определённое количество hp."""
 
     hp = 150
-    copter_chance = 0
 
     def __init__(self, coordinates):
         """Инициализация коробки"""
@@ -20,22 +19,7 @@ class Box(pgsp.Sprite):
         # Передаем два нижних атрибута, чтобы rect понимал размеры коробки и обрабатывал её хитбокс
         self.rect.x = self.coordinates[0]
         self.rect.y = self.coordinates[1]
-
-        match self.copter_chance:
-            case 0.25:
-                if random.randint(1, 4) == 1:
-                    self.is_copter_inside = True
-                else: self.is_copter_inside = False
-            case 0.5:
-                if random.randint(1, 2) == 1:
-                    self.is_copter_inside = True
-                else: self.is_copter_inside = False
-            case 0.75:
-                if random.randint(1, 4) == 1:
-                    self.is_copter_inside = False
-                else: self.is_copter_inside = True
-            case 1:
-                self.is_copter_inside = True
+        self.is_copter_inside = random.randint(1,2)
 
 
 class Field:
