@@ -95,7 +95,6 @@ class MainMenu:
 
     def draw(self):
         """Отрисовывает меню, состоящее из кнопок и заднего фона """
-        print(self.difficulty.difficluty)
         if self.is_opened:
             self.screen.blit(self.background, (0, 0))
             self.stats_menu.draw()
@@ -187,12 +186,90 @@ class StatsMenu():
     def __init__(self, screen):
         self.screen = screen
         self.is_opened = False
+        self.stats = save_script.Save()
+        self.font = pygame.font.Font('fonts/minecraft.ttf', 20 )
+        self.title_font = pygame.font.Font('fonts/minecraft.ttf', 30)
+        self.font_color = (255, 255, 255)
+        self.font_shadow_color = (0, 0, 0)
+        self.stats_tank_topleft_title = self.title_font.render('Статистика зелёного танка:',
+                                                   True, self.font_color)
+        self.stats_tank_topleft_title_shadow = self.title_font.render('Статистика зелёного танка:',
+                                                         True, self.font_shadow_color)
+
+        self.stats_tank_topleft_score = self.font.render(f'Общее количество очков: {self.stats.tank_topleft_stats[0]}',
+                                                   True, self.font_color)
+        self.stats_tank_topleft_score_shadow = self.font.render(f'Общее количество очков: {self.stats.tank_topleft_stats[0]}',
+                                                   True, self.font_shadow_color)
+
+        self.stats_tank_topleft_kills = self.font.render(f'Количество подбитых танков: {self.stats.tank_topleft_stats[1]}',
+                                                         True, self.font_color)
+        self.stats_tank_topleft_kills_shadow = self.font.render(
+            f'Количество подбитых танков: {self.stats.tank_topleft_stats[1]}',
+            True, self.font_shadow_color)
+
+        self.stats_tank_topleft_copter_kills = self.font.render(
+            f'Количество подбитых дронов: {self.stats.tank_topleft_stats[2]}',
+            True, self.font_color)
+        self.stats_tank_topleft_copter_kills_shadow = self.font.render(
+            f'Количество подбитых дронов: {self.stats.tank_topleft_stats[2]}',
+            True, self.font_shadow_color)
+
+
+        self.stats_tank_bottomright_title = self.title_font.render('Статистика жёлтого танка:',
+                                                               True, self.font_color)
+        self.stats_tank_bottomright_title_shadow = self.title_font.render('Статистика жёлтого танка:',
+                                                                      True, self.font_shadow_color)
+        self.stats_tank_bottomright_score = self.font.render(f'Общее количество очков: {self.stats.tank_bottomright_stats[0]}',
+                                                         True, self.font_color)
+        self.stats_tank_bottomright_score_shadow = self.font.render(
+            f'Общее количество очков: {self.stats.tank_bottomright_stats[0]}',
+            True, self.font_shadow_color)
+
+        self.stats_tank_bottomright_kills = self.font.render(
+            f'Количество подбитых танков: {self.stats.tank_bottomright_stats[1]}',
+            True, self.font_color)
+        self.stats_tank_bottomright_kills_shadow = self.font.render(
+            f'Количество подбитых танков: {self.stats.tank_bottomright_stats[1]}',
+            True, self.font_shadow_color)
+
+        self.stats_tank_bottomright_copter_kills = self.font.render(
+            f'Количество подбитых дронов: {self.stats.tank_bottomright_stats[2]}',
+            True, self.font_color)
+        self.stats_tank_bottomright_copter_kills_shadow = self.font.render(
+            f'Количество подбитых дронов: {self.stats.tank_bottomright_stats[2]}',
+            True, self.font_shadow_color)
+
         self.back_to_menu = Button(screen, 500, 250, 70, "Назад")
 
     def draw(self):
         if self.is_opened:
+
             self.back_to_menu.draw()
 
+            self.screen.blit(self.stats_tank_topleft_title_shadow, (80 + 3, 40 + 3))
+            self.screen.blit(self.stats_tank_topleft_title, (80, 40))
+
+            self.screen.blit(self.stats_tank_topleft_score_shadow, (100 + 2, 100 + 2))
+            self.screen.blit(self.stats_tank_topleft_score, (100, 100))
+
+            self.screen.blit(self.stats_tank_topleft_kills_shadow, (100 + 2, 140 + 2))
+            self.screen.blit(self.stats_tank_topleft_kills, (100, 140))
+
+            self.screen.blit(self.stats_tank_topleft_copter_kills_shadow, (100 + 2, 180 + 2))
+            self.screen.blit(self.stats_tank_topleft_copter_kills, (100, 180))
+
+
+            self.screen.blit(self.stats_tank_bottomright_title_shadow, (80 + 3, 240 + 3))
+            self.screen.blit(self.stats_tank_bottomright_title, (80, 240))
+
+            self.screen.blit(self.stats_tank_bottomright_score_shadow, (100 + 2, 300 + 2))
+            self.screen.blit(self.stats_tank_bottomright_score, (100, 300))
+
+            self.screen.blit(self.stats_tank_bottomright_kills_shadow, (100 + 2, 340 + 2))
+            self.screen.blit(self.stats_tank_bottomright_kills, (100, 340))
+
+            self.screen.blit(self.stats_tank_bottomright_copter_kills_shadow, (100 + 2, 380 + 2))
+            self.screen.blit(self.stats_tank_bottomright_copter_kills, (100, 380))
     def update(self, event):
         if self.is_opened:
             self.back_to_menu.update(event)
@@ -211,9 +288,9 @@ class VictoryMenu:
         self.saved_info = []
         self.save = save_script.Save()
 
-    def draw(self, tank_topleft, tank_bottom_right):
+    def draw(self, tank_topleft, tank_bottomright):
 
-        if tank_bottom_right.alive == False and tank_topleft.alive == True:
+        if tank_bottomright.alive == False and tank_topleft.alive == True:
 
             text_shadow = self.font.render("Победа Русских!", True, self.font_shadow_color)
             text = self.font.render("Победа Русских!", True, self.font_color)
@@ -227,9 +304,9 @@ class VictoryMenu:
                 self.screen.blit(text_shadow, (90 + 4, 250 + 4))
                 self.screen.blit(text, (125, 250))
             save = save_script.Save()
-            save.tank_kill(tank_topleft, tank_bottom_right)
+            save.tank_kill(tank_topleft, tank_bottomright)
 
-        elif tank_bottom_right.alive == True and tank_topleft.alive == False:
+        elif tank_bottomright.alive == True and tank_topleft.alive == False:
 
             text_shadow = self.font.render("Victory of the USA!", True, self.font_shadow_color)
             text = self.font.render("Victory of the USA!", True, self.font_color)
@@ -238,9 +315,9 @@ class VictoryMenu:
             if self.is_openned:
                 self.screen.blit(text_shadow, (70 + 4, 250 + 4))
                 self.screen.blit(text, (80, 250))
-            self.save.tank_kill(tank_bottom_right, tank_topleft)
+            self.save.tank_kill(tank_bottomright, tank_topleft)
 
-        elif tank_bottom_right.alive == False and tank_topleft.alive == False:
+        elif tank_bottomright.alive == False and tank_topleft.alive == False:
 
             text_shadow = self.font.render("Victory of the USA!", True, self.font_shadow_color)
             text = self.font.render(f"Ничья", True, self.font_color)
