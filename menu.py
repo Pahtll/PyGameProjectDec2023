@@ -24,7 +24,7 @@ class Button:
         self.rect = pg.Rect(self.x, y, width, height)
         self.height = height
         self.text = text
-        self.color = (255, 255, 255)
+        self.color = (128, 128, 128)
         self.font = pygame.font.Font(None, int(height / 1.5))
         self.font_color = self.color
 
@@ -78,8 +78,9 @@ class MainMenu:
     def __init__(self, screen):
         self.screen = screen
         self.background = pg.image.load('images/backgrounds/menuBG.png')
-        self.button_start = Button(screen, 200, 250, 70, "Начать игру")
-        self.button_exit = Button(screen, 300, 250, 70, "Выйти из игры")
+        self.button_start = Button(screen, 150, 250, 70, "Начать игру")
+        self.button_exit = Button(screen, 350, 250, 70, "Выйти из игры")
+        self.button_stats = Button(screen, 250, 250, 70, "Статистика")
         self.difficulty = DifficultyChangeMenu(self.screen)
         self.is_opened = True
 
@@ -89,11 +90,13 @@ class MainMenu:
             self.screen.blit(self.background, (0, 0))
             self.button_start.draw()
             self.button_exit.draw()
+            self.button_stats.draw()
 
     def update(self, event):
         """Проверка нажаты ли кнопки """
         self.button_start.update(event)
         self.button_exit.update(event)
+        self.button_stats.update(event)
 
         if self.button_start.state == 'pressed':
             self.is_opened = False
