@@ -1,6 +1,6 @@
 """Создание эскейп меню"""
 from menu import Button
-import run, pygame as pg, score
+import run, pygame as pg, score, save_script
 
 
 class EscapeMenu:
@@ -12,8 +12,8 @@ class EscapeMenu:
     """
     def __init__(self, screen):
         self.screen = screen
-        self.button_resume = Button(screen, 200, 400, 70, "Продолжить")
-        self.button_main_menu = Button(screen, 300, 400, 70, "Выйти в главное меню")
+        self.button_resume = Button(screen, 200, 350, 70, "Продолжить")
+        self.button_main_menu = Button(screen, 300, 350, 70, "Выйти в главное меню")
         self.is_opened = False
 
     def draw(self, score_topleft, score_bottomright):
@@ -49,5 +49,7 @@ class EscapeMenu:
                 score.save_scores(score_topleft, score_bottomright)
                 menu.is_opened = True
                 self.is_opened = False
-                # Запускает процесс перезагрузки.
+                # Запускает процесс перезагрузки и сохраняет текущий стейт игры
+                save = save_script.Save()
+                save.drone_kill()
                 run.run_game()
