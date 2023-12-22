@@ -99,7 +99,7 @@ class MainMenu:
         if self.button_start.state == 'pressed':
             self.is_opened = False
             self.button_start.state = 'normal'
-            self.difficulty.is_opened  = True
+            self.difficulty.is_opened = True
 
         elif self.button_exit.state == 'pressed':
             sys.exit()
@@ -149,6 +149,7 @@ class DifficultyChangeMenu:
     def get_difficulty(self):
         return self.difficluty
 
+
 class VictoryMenu:
 
     def __init__(self, screen):
@@ -157,6 +158,7 @@ class VictoryMenu:
         self.font = pygame.font.Font('fonts/minecraft.ttf', 100)
         self.font_color = (255, 255, 255)
         self.saved_info = []
+        self.save = save_script.Save()
 
     def draw(self, tank_topleft, tank_bottom_right):
 
@@ -165,16 +167,18 @@ class VictoryMenu:
             text = self.font.render("Победа Русских!", True, self.font_color)
             self.is_openned = True
             if self.is_openned: self.screen.blit(text, (125, 250))
+            save = save_script.Save()
+            save.tank_kill(tank_topleft, tank_bottom_right)
 
         elif tank_bottom_right.alive == True and tank_topleft.alive == False:
 
             text = self.font.render("Victory of the USA!", True, self.font_color)
             self.is_openned = True
             if self.is_openned: self.screen.blit(text, (80, 250))
+            self.save.tank_kill(tank_bottom_right, tank_topleft)
 
         elif tank_bottom_right.alive == False and tank_topleft.alive == False:
 
             text = self.font.render(f"Ничья", True, self.font_color)
             self.is_openned = True
             if self.is_openned: self.screen.blit(text, (300, 250))
-

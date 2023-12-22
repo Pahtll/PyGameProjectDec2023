@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.sprite import Group
 from escape import EscapeMenu
-import background, menu, controls, tank, field, animations, hp
+import background, menu, controls, tank, field, animations, hp, save_script
 
 # Запуск программы
 pg.init()
