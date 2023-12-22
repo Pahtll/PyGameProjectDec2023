@@ -1,7 +1,6 @@
 """Создание плашки хп"""
 import pygame as pg, tank
 
-
 class Hp(pg.sprite.Sprite):
 
     WHITE = (255, 255, 255)
@@ -17,7 +16,7 @@ class Hp(pg.sprite.Sprite):
         self.green_line = pg.Rect(0, 0, 33, 5)
         self.red_line = pg.Rect(0, 0, 0, 5)
         # Переменная, которая с каждым выстрелом вычитает выражение round((tank.Tank.hp - self.hp)/33)
-        # Разница нынешних хпшек танка от изначального количества, деленное на 33, потому что 33 - длина в пикселях
+        # Разница нынешних хп-шек танка от изначального количества, деленное на 33, потому что 33 - длина в пикселях
         # зеленой полоски
         self.red_line_diff = 34
         self.directional_dependence = {'left': 4, 'right': 0, 'up': 0, 'down': 0}

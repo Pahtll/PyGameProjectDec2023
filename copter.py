@@ -1,7 +1,4 @@
-import pygame as pg, tank
-import pygame.sprite
-import math
-
+import pygame as pg, tank, pygame.sprite, math
 
 class Copter(pygame.sprite.Sprite):
     """

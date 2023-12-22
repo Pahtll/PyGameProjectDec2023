@@ -1,7 +1,5 @@
 """Здесь прописано меню, которое открывается на клавишу escape"""
-import sys
-import pygame as pg
-import pygame.font
+import sys, pygame as pg, pygame.font, score
 
 
 class Button:
@@ -101,6 +99,7 @@ class MainMenu:
             self.difficulty.is_opened  = True
 
         elif self.button_exit.state == 'pressed':
+            score.delete_scores()
             sys.exit()
 
 class DifficultyChangeMenu:
