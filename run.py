@@ -22,10 +22,8 @@ pg.display.set_icon(icon)
 # Главное меню
 main_menu = menu.MainMenu(screen)
 
-
-# Установка сложности игры // Оставляйте 1 пока что
-
-def RunGame():
+def run_game():
+    # Установка сложности игры // Оставляйте test пока что
     controls.set_difficulty('test')
     # Задний фон для игры
     background_image = background.create_background()
