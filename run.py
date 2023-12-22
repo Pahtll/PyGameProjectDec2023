@@ -59,6 +59,9 @@ def run_game():
     score_topleft = score.ScoreTopleft(screen, tank_topleft)
     score_bottomright = score.ScoreBottomright(screen, tank_bottomright)
 
+    # Проверка установлена ли сложность или нет
+    is_difficulty_set = False
+
     # Эта переменная отвечает за то, какой кадр будет использоваться в анимации коптера
     copter_image_index = 0
     running = True
@@ -67,7 +70,10 @@ def run_game():
         clock.tick(FPS)
 
         # Установка сложности игры // Оставляйте 1 пока что
-        controls.set_difficulty(main_menu.difficulty.get_difficulty())
+        if main_menu.difficulty.get_difficulty() and not is_difficulty_set:
+            chance = controls.set_difficulty(main_menu.difficulty.get_difficulty())
+            controls.set_chance_to_drone(field_of_boxes.boxes, chance)
+            is_difficulty_set = True
 
         if not main_menu.is_opened and not main_menu.difficulty.is_opened:
 
@@ -128,8 +134,6 @@ def run_game():
         main_menu.difficulty.draw()
 
         copter_image_index += 1
-
-        #
 
         # Отрисовка меню, открываемое на кнопку "esc"
         escape_menu.draw(score_topleft, score_bottomright)

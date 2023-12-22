@@ -112,7 +112,7 @@ class DifficultyChangeMenu:
         self.button_difficulty_2 = Button(screen, 250, 250, 70, "2 сложность")
         self.button_difficulty_3 = Button(screen, 350, 250, 70, "3 сложность")
         self.is_opened = False
-        self.difficluty = 0
+        self.difficulty = 0
 
     def draw(self):
         """Отрисовывает меню, состоящее из кнопок и заднего фона """
@@ -132,20 +132,20 @@ class DifficultyChangeMenu:
         if self.button_difficulty_1.state == 'pressed':
             self.is_opened = False
             self.button_difficulty_1.state = 'normal'
-            self.difficluty = 1
+            self.difficulty = 1
 
         elif self.button_difficulty_2.state == 'pressed':
             self.is_opened = False
             self.button_difficulty_2.state = 'normal'
-            self.difficluty = 2
+            self.difficulty = 2
 
         elif self.button_difficulty_3.state == 'pressed':
             self.is_opened = False
             self.button_difficulty_3.state = 'normal'
-            self.difficluty = 3
+            self.difficulty = 3
 
     def get_difficulty(self):
-        return self.difficluty
+        return self.difficulty
 
 class VictoryMenu:
 
