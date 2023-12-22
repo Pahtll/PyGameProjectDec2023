@@ -1,7 +1,6 @@
-import pygame as pg
 from pygame.sprite import Group
 from escape import EscapeMenu
-import background, menu, controls, tank, field, animations, hp, save_script
+import pygame as pg, background, menu, controls, tank, field, animations, hp, score
 
 # Запуск программы
 pg.init()
@@ -21,9 +20,6 @@ pg.display.set_icon(icon)
 
 # Главное меню
 main_menu = menu.MainMenu(screen)
-
-
-# Установка сложности игры // Оставляйте 1 пока что
 
 def run_game():
 
@@ -60,6 +56,9 @@ def run_game():
     escape_menu = EscapeMenu(screen)
     victory_menu = menu.VictoryMenu(screen)
 
+    score_topleft = score.ScoreTopleft(screen, tank_topleft)
+    score_bottomright = score.ScoreBottomright(screen, tank_bottomright)
+
     # Эта переменная отвечает за то, какой кадр будет использоваться в анимации коптера
     copter_image_index = 0
     running = True
@@ -67,6 +66,7 @@ def run_game():
         # Количество фпс
         clock.tick(FPS)
 
+        # Установка сложности игры // Оставляйте 1 пока что
         controls.set_difficulty(main_menu.difficulty.get_difficulty())
 
         if not main_menu.is_opened and not main_menu.difficulty.is_opened:
@@ -124,14 +124,15 @@ def run_game():
                     tank_topleft.move(keys_get_pressed, boxes, tank_bottomright)
                     tank_bottomright.move(keys_get_pressed, boxes, tank_topleft)
 
-
         main_menu.draw()
         main_menu.difficulty.draw()
 
         copter_image_index += 1
 
+        #
+
         # Отрисовка меню, открываемое на кнопку "esc"
-        escape_menu.draw()
+        escape_menu.draw(score_topleft, score_bottomright)
 
         # Обновление экрана
         pg.display.flip()
@@ -140,7 +141,7 @@ def run_game():
 
             if not main_menu.is_opened and not main_menu.difficulty.is_opened:
 
-                escape_menu.open(event, main_menu)
+                escape_menu.open(event, main_menu, score_topleft, score_bottomright)
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_SPACE:
                         tank_topleft.generate_bullet(screen, bullets_topleft, event)
@@ -155,6 +156,7 @@ def run_game():
                 main_menu.difficulty.update(event)
 
             if event.type == pg.QUIT:
+                score.delete_scores()
                 running = False
                 pg.quit()
 

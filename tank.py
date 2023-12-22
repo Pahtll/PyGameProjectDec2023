@@ -1,9 +1,5 @@
 """Создание пуль, танков"""
-import pygame as pg
-import pygame.sprite
-import field, copter, animations
-import tank
-
+import pygame as pg, pygame.sprite, field, copter, animations, tank
 
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
@@ -59,7 +55,15 @@ class Tank(pg.sprite.Sprite):
     speed = 1
     hp = 560
     shot_delay = 500
+
+    """
+    Ниже представлены атрибуты, которые отвечают за кол-во уничтоженных дронов, танков, коробок 
+    и попаданий в другой танк. Всё это нужно для подсчёта очков в текущем игровом сеансе.
+    """
     killed_drones = 0
+    killed_tanks = 0
+    killed_boxes = 0
+    hit_other_tank = 0
 
     def __init__(self, screen, x, y):
         super().__init__()
@@ -120,7 +124,7 @@ class Tank(pg.sprite.Sprite):
 
                 if hit_copter:
                     copter_object.hp -= bullet.damage
-                    if copter_object.hp == 0:
+                    if copter_object.hp <= 0:
                         self.killed_drones += 1
 
             # Проверяет, касается ли пуля другого танка.
@@ -128,9 +132,12 @@ class Tank(pg.sprite.Sprite):
 
             if hit_tank:
                 other_tank.hp -= bullet.damage
+                self.hit_other_tank += 1
                 difference = (hp_other_tank.green_line.width * (1 - (other_tank.hp / tank.Tank.hp))) - hp_other_tank.red_line.width
                 hp_other_tank.red_line.width += difference
                 hp_other_tank.red_line_diff -= difference
+                if other_tank.hp <= 0:
+                    self.killed_tanks += 1
 
         # Берём по коробке из группы спрайтов коробок. Для проверки
         for box in boxes.sprites():
@@ -145,6 +152,7 @@ class Tank(pg.sprite.Sprite):
                 # Удаляем коробку, если она потеряла всем хп
                 if box.hp <= 0:
                     boxes.remove(box)
+                    self.killed_boxes += 1
                     if box.is_copter_inside:
                         copters.add(copter.Copter(self.screen, box.x, box.y))
 
