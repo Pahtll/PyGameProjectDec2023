@@ -22,11 +22,10 @@ pg.display.set_icon(icon)
 # Главное меню
 main_menu = menu.MainMenu(screen)
 
-
 # Установка сложности игры // Оставляйте 1 пока что
 
 def RunGame():
-    controls.set_difficulty('test')
+
     # Задний фон для игры
     background_image = background.create_background()
 
@@ -60,7 +59,9 @@ def RunGame():
         # Количество фпс
         clock.tick(FPS)
 
-        if not main_menu.is_opened:
+        controls.set_difficulty(main_menu.difficulty.get_difficulty())
+
+        if not main_menu.is_opened and not main_menu.difficulty.is_opened:
 
             # Постоянное отображение заднего фона игры
             screen.blit(background_image, (0, 0))
@@ -112,8 +113,9 @@ def RunGame():
                     tank_topleft.move(keys_get_pressed, boxes, tank_bottomright)
                     tank_bottomright.move(keys_get_pressed, boxes, tank_topleft)
 
-        elif main_menu.is_opened:
-            main_menu.draw()
+
+        main_menu.draw()
+        main_menu.difficulty.draw()
 
         copter_image_index += 1
 
@@ -125,7 +127,7 @@ def RunGame():
 
         for event in pg.event.get():
 
-            if not main_menu.is_opened:
+            if not main_menu.is_opened and not main_menu.difficulty.is_opened:
 
                 escape_menu.open(event, main_menu)
                 if event.type == pg.KEYDOWN:
@@ -137,6 +139,9 @@ def RunGame():
             elif main_menu.is_opened:
                 # Если нажата кнопка выхода из игры, то программа должна завершиться.
                 main_menu.update(event)
+
+            elif main_menu.difficulty.is_opened:
+                main_menu.difficulty.update(event)
 
             if event.type == pg.QUIT:
                 running = False

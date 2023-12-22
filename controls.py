@@ -34,6 +34,7 @@ def set_difficulty(range):
             copter.Copter.speed = 2
             copter.Copter.damage = 3
             copter.Copter.hp = 100
+
         case 3:
             tank.Tank.speed = 2
             tank.Tank.hp = 420
