@@ -13,7 +13,7 @@ clock = pg.time.Clock()
 FPS = 60
 WIDTH, HEIGHT = 800, 600
 screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption('bro, tanki')
+pg.display.set_caption('tanki v tanki')
 
 # Иконка для приложения
 icon = pg.image.load('images/tank_topleft/tank1_up.png')
@@ -43,6 +43,9 @@ def RunGame():
     # Создание плашки хп
     hp_topleft = hp.Hp(screen, tank_topleft)
     hp_bottomright = hp.Hp(screen, tank_bottomright)
+
+    tank_topleft(hp_topleft)
+    tank_bottomright(hp_bottomright)
 
     # Создание экземпляра класса взрыв
     explosion = animations.Explosion()
