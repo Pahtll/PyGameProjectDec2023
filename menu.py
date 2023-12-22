@@ -22,11 +22,12 @@ class Button:
         self.x = (800 - width) / 2
         self.y = y
         self.rect = pg.Rect(self.x, y, width, height)
+        self.rect_shadow = pg.Rect(self.x + 2, y + 2, width, height)
         self.height = height
         self.text = text
-        self.color = (128, 128, 128)
-        self.font = pygame.font.Font(None, int(height / 1.5))
-        self.font_color = self.color
+        self.color = (255, 255, 255)
+        self.shadow_color = (0, 0, 0)
+        self.font = pygame.font.Font('fonts/minecraft.ttf', int(height / 3))
 
         """
         State отвечает за состояние кнопки. Всего есть 3 состояния: 
@@ -39,9 +40,13 @@ class Button:
     def draw(self):
         """Функция выводит кнопку на экран."""
 
-        pg.draw.rect(self.screen, self.color, self.rect, 10)
-        text = self.font.render(self.text, True, self.font_color)
+        pg.draw.rect(self.screen, self.shadow_color, self.rect_shadow, 6)
+        pg.draw.rect(self.screen, self.color, self.rect, 6)
+        text = self.font.render(self.text, True, self.color)
+        text_shadow = self.font.render(self.text, True, self.shadow_color)
         position = text.get_rect(center=self.rect.center)
+        shadow_position = (position[0] + 2, position[1] + 2)
+        self.screen.blit(text_shadow, shadow_position)
         self.screen.blit(text, position)
 
     def update(self, event):
@@ -62,9 +67,11 @@ class Button:
         # Если пользователь навёлся на кнопку, то подсветить её белым
         if self.state == 'hover':
             self.color = (0, 0, 0)
+            self.shadow_color = (255, 255, 255)
 
         elif self.state == 'normal':
             self.color = (255, 255, 255)
+            self.shadow_color = (0, 0, 0)
 
         # Если пользователь навёлся на кнопку и нажал на мышку, то состояние кнопки - pressed
         if event.type == pg.MOUSEBUTTONDOWN and self.state == 'hover':
@@ -78,9 +85,9 @@ class MainMenu:
     def __init__(self, screen):
         self.screen = screen
         self.background = pg.image.load('images/backgrounds/menuBG.png')
-        self.button_start = Button(screen, 150, 250, 70, "Начать игру")
-        self.button_exit = Button(screen, 350, 250, 70, "Выйти из игры")
-        self.button_stats = Button(screen, 250, 250, 70, "Статистика")
+        self.button_start = Button(screen, 150, 300, 70, "Начать игру")
+        self.button_exit = Button(screen, 350, 300, 70, "Выйти из игры")
+        self.button_stats = Button(screen, 250, 300, 70, "Статистика")
         self.difficulty = DifficultyChangeMenu(self.screen)
         self.is_opened = True
 
@@ -156,22 +163,29 @@ class VictoryMenu:
     def __init__(self, screen):
         self.screen = screen
         self.is_openned = False
-        self.font = pygame.font.Font(None, 100)
+        self.font = pygame.font.Font('fonts/minecraft.ttf', 60)
         self.font_color = (255, 255, 255)
+        self.font_shadow_color = (0, 0, 0)
 
     def draw(self, tank_topleft, tank_bottom_right):
 
         if tank_bottom_right.alive == False and tank_topleft.alive == True:
 
+            text_shadow = self.font.render("Победа Русских!", True, self.font_shadow_color)
             text = self.font.render("Победа Русских!", True, self.font_color)
             self.is_openned = True
-            if self.is_openned: self.screen.blit(text, (125, 250))
+            if self.is_openned:
+                self.screen.blit(text_shadow, (90 + 4, 250 + 4))
+                self.screen.blit(text, (90, 250))
 
         elif tank_bottom_right.alive == True and tank_topleft.alive == False:
 
+            text_shadow = self.font.render("Victory of the USA!", True, self.font_shadow_color)
             text = self.font.render("Victory of the USA!", True, self.font_color)
             self.is_openned = True
-            if self.is_openned: self.screen.blit(text, (80, 250))
+            if self.is_openned:
+                self.screen.blit(text_shadow, (70 + 4, 250 + 4))
+                self.screen.blit(text, (70, 250))
 
         elif tank_bottom_right.alive == False and tank_topleft.alive == False:
 

@@ -59,6 +59,7 @@ class Tank(pg.sprite.Sprite):
     speed = 1
     hp = 560
     shot_delay = 500
+    killed_drones = 0
 
     def __init__(self, screen, x, y):
         super().__init__()
@@ -84,6 +85,8 @@ class Tank(pg.sprite.Sprite):
             explosion.boom(self.screen, self.rect.centerx, self.rect.centery)
             self.alive = False
 
+    def __call__(self, hp_line):
+        self.hp_line = hp_line
 
     def shot(self, bullets, boxes, other_tank, copters, hp_other_tank):
         """
@@ -112,20 +115,20 @@ class Tank(pg.sprite.Sprite):
         # Проверка жив ли чужой танк. Нужно для того, чтобы пули не упирались в его спрайт.
         if other_tank.alive:
 
-            # Проверяет, касается ли пуля другого танка.
-            hit_tank = pygame.sprite.spritecollide(other_tank, bullets, True)
-
             for copter_object in copters:
                 hit_copter = pygame.sprite.spritecollide(copter_object, bullets, True)
 
                 if hit_copter:
                     copter_object.hp -= bullet.damage
+                    if copter_object.hp == 0:
+                        self.killed_drones += 1
+
+            # Проверяет, касается ли пуля другого танка.
+            hit_tank = pygame.sprite.spritecollide(other_tank, bullets, True)
 
             if hit_tank:
                 other_tank.hp -= bullet.damage
-
-                difference = round(hp_other_tank.green_line.width / (Tank.hp / bullet.damage))
-
+                difference = (hp_other_tank.green_line.width * (1 - (other_tank.hp / tank.Tank.hp))) - hp_other_tank.red_line.width
                 hp_other_tank.red_line.width += difference
                 hp_other_tank.red_line_diff -= difference
 
@@ -269,6 +272,7 @@ class TankTopLeft(Tank):
 
 class TankBottomRight(Tank):
     """Отвечает за нижний правый танк (управление на стрелочки, стрельба на правый контрол.)"""
+
     def __init__(self, screen, x, y):
         self.surf = pg.image.load('images/tank_bottomright/tank2_right.png')
         self.rect = self.surf.get_rect()
