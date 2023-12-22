@@ -1,6 +1,7 @@
 from pygame.sprite import Group
 from escape import EscapeMenu
-import pygame as pg, background, menu, controls, tank, field, animations, hp, score
+import pygame as pg, background, menu, controls, tank, field, animations, hp, score, save_script
+
 
 # Запуск программы
 pg.init()
@@ -92,7 +93,6 @@ def run_game():
             # Отображение спрайта танка
             tank_topleft.update()
             tank_bottomright.update()
-
             # Отображение плашки на экране
             hp_topleft.update()
             hp_bottomright.update()
@@ -131,7 +131,6 @@ def run_game():
                     tank_bottomright.move(keys_get_pressed, boxes, tank_topleft)
 
         main_menu.draw()
-        main_menu.difficulty.draw()
 
         copter_image_index += 1
 
@@ -155,9 +154,6 @@ def run_game():
             elif main_menu.is_opened:
                 # Если нажата кнопка выхода из игры, то программа должна завершиться.
                 main_menu.update(event)
-
-            elif main_menu.difficulty.is_opened:
-                main_menu.difficulty.update(event)
 
             if event.type == pg.QUIT:
                 score.delete_scores()

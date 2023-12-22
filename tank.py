@@ -398,3 +398,4 @@ class TankBottomRight(Tank):
 
             elif self.direction == 'up':
                 self.screen.blit(self.image_up, self.rect)
+                
