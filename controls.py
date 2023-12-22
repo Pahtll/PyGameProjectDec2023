@@ -12,6 +12,7 @@ def set_difficulty(range):
     "Test" - для тестеровки при разработке (читерский мод)
     """
     match range:
+      
         case 1:
             tank.Tank.speed = 2
             tank.Tank.hp = 200
@@ -24,7 +25,6 @@ def set_difficulty(range):
             copter.Copter.damage = 2
             copter.Copter.hp = 50
 
-
         case 2:
             tank.Tank.speed = 2
             tank.Tank.hp = 300
@@ -36,6 +36,7 @@ def set_difficulty(range):
             copter.Copter.speed = 2
             copter.Copter.damage = 3
             copter.Copter.hp = 100
+            
         case 3:
             tank.Tank.speed = 2
             tank.Tank.hp = 420
@@ -49,10 +50,10 @@ def set_difficulty(range):
             copter.Copter.hp = 100
 
         case _:
-            tank.Tank.speed = 3
-            tank.Tank.hp = 420
+            tank.Tank.speed = 5
+            tank.Tank.hp = 300
             tank.Tank.shot_delay = 0
-            tank.Bullet.damage = 500
+            tank.Bullet.damage = 70
             tank.Bullet.speed = 20
             field.Box.hp = 40
             field.Box.copter_chance = 1  # 100%
