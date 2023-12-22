@@ -25,7 +25,7 @@ class Button:
         self.height = height
         self.text = text
         self.color = (255, 255, 255)
-        self.font = pygame.font.Font(None, int(height / 1.5))
+        self.font = pygame.font.Font('fonts/minecraft.ttf', int(height / 3))
         self.font_color = self.color
 
         """
@@ -153,7 +153,7 @@ class VictoryMenu:
     def __init__(self, screen):
         self.screen = screen
         self.is_openned = False
-        self.font = pygame.font.Font(None, 100)
+        self.font = pygame.font.Font('fonts/minecraft.ttf', 100)
         self.font_color = (255, 255, 255)
 
     def draw(self, tank_topleft, tank_bottom_right):
