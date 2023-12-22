@@ -89,74 +89,115 @@ class MainMenu:
         self.button_exit = Button(screen, 350, 300, 70, "Выйти из игры")
         self.button_stats = Button(screen, 250, 300, 70, "Статистика")
         self.difficulty = DifficultyChangeMenu(self.screen)
+        self.stats_menu = StatsMenu(self.screen)
         self.is_opened = True
 
     def draw(self):
         """Отрисовывает меню, состоящее из кнопок и заднего фона """
+        print(self.difficulty.difficluty)
         if self.is_opened:
             self.screen.blit(self.background, (0, 0))
-            self.button_start.draw()
-            self.button_exit.draw()
-            self.button_stats.draw()
+            self.stats_menu.draw()
+            self.difficulty.draw()
+            if not self.stats_menu.is_opened and not self.difficulty.is_opened:
+                self.button_start.draw()
+                self.button_exit.draw()
+                self.button_stats.draw()
 
     def update(self, event):
         """Проверка нажаты ли кнопки """
-        self.button_start.update(event)
-        self.button_exit.update(event)
-        self.button_stats.update(event)
+        if self.difficulty.button_difficulty_1 == 'pressed' or self.difficulty.button_difficulty_2 == 'pressed' \
+                or self.difficulty.button_difficulty_3 == 'pressed':
+            self.is_opened = False
+        self.stats_menu.update(event)
+        self.difficulty.update(event)
+        if not self.stats_menu.is_opened and not self.difficulty.is_opened:
+            self.button_start.update(event)
+            self.button_exit.update(event)
+            self.button_stats.update(event)
 
         if self.button_start.state == 'pressed':
-            self.is_opened = False
             self.button_start.state = 'normal'
             self.difficulty.is_opened  = True
 
         elif self.button_exit.state == 'pressed':
             sys.exit()
 
+        elif self.button_stats.state == 'pressed':
+            self.stats_menu.is_opened = True
+            self.button_stats.state = 'normal'
+
+        elif self.difficulty.button_difficulty_1.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.is_opened = False
+            self.difficulty.button_difficulty_1.state = 'normal'
+            self.difficulty.difficluty = 1
+
+        elif self.difficulty.button_difficulty_2.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.is_opened = False
+            self.difficulty.button_difficulty_2.state = 'normal'
+            self.difficulty.difficluty = 2
+
+        elif self.difficulty.button_difficulty_3.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.is_opened = False
+            self.difficulty.button_difficulty_3.state = 'normal'
+            self.difficulty.difficluty = 3
+
+        elif self.difficulty.back_to_menu.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.difficulty.back_to_menu.state = 'normal'
+
 class DifficultyChangeMenu:
     """Главное меню, из которого происходит вход в игру и выход из неё."""
 
     def __init__(self, screen):
         self.screen = screen
-        self.background = pg.image.load('images/backgrounds/menuBG.png')
         self.button_difficulty_1 = Button(screen, 150, 250, 70, "1 сложность")
         self.button_difficulty_2 = Button(screen, 250, 250, 70, "2 сложность")
         self.button_difficulty_3 = Button(screen, 350, 250, 70, "3 сложность")
+        self.back_to_menu = Button(screen, 500, 250, 70, "Назад")
         self.is_opened = False
+        self.main_menu_need_to_close = False
         self.difficluty = 0
 
     def draw(self):
         """Отрисовывает меню, состоящее из кнопок и заднего фона """
         if self.is_opened:
-            self.screen.blit(self.background, (0, 0))
             self.button_difficulty_1.draw()
             self.button_difficulty_2.draw()
             self.button_difficulty_3.draw()
+            self.back_to_menu.draw()
 
     def update(self, event):
         """Проверка нажаты ли кнопки """
-        self.button_difficulty_1.update(event)
-        self.button_difficulty_2.update(event)
-        self.button_difficulty_3.update(event)
-
-
-        if self.button_difficulty_1.state == 'pressed':
-            self.is_opened = False
-            self.button_difficulty_1.state = 'normal'
-            self.difficluty = 1
-
-        elif self.button_difficulty_2.state == 'pressed':
-            self.is_opened = False
-            self.button_difficulty_2.state = 'normal'
-            self.difficluty = 2
-
-        elif self.button_difficulty_3.state == 'pressed':
-            self.is_opened = False
-            self.button_difficulty_3.state = 'normal'
-            self.difficluty = 3
+        if self.is_opened:
+            self.button_difficulty_1.update(event)
+            self.button_difficulty_2.update(event)
+            self.button_difficulty_3.update(event)
+            self.back_to_menu.update(event)
 
     def get_difficulty(self):
         return self.difficluty
+
+class StatsMenu():
+
+    def __init__(self, screen):
+        self.screen = screen
+        self.is_opened = False
+        self.back_to_menu = Button(screen, 500, 250, 70, "Назад")
+
+    def draw(self):
+        if self.is_opened:
+            self.back_to_menu.draw()
+
+    def update(self, event):
+        if self.is_opened:
+            self.back_to_menu.update(event)
+            if self.back_to_menu.state == 'pressed':
+                self.is_opened = False
+                self.back_to_menu.state = 'normal'
 
 class VictoryMenu:
 
@@ -189,7 +230,10 @@ class VictoryMenu:
 
         elif tank_bottom_right.alive == False and tank_topleft.alive == False:
 
+            text_shadow = self.font.render("Victory of the USA!", True, self.font_shadow_color)
             text = self.font.render("Ничья", True, self.font_color)
             self.is_openned = True
-            if self.is_openned: self.screen.blit(text, (300, 250))
+            if self.is_openned:
+                self.screen.blit(text_shadow, (100 + 4, 250 + 4))
+                self.screen.blit(text, (100, 250))
 

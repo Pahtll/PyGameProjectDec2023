@@ -66,7 +66,6 @@ def run_game():
     while running:
         # Количество фпс
         clock.tick(FPS)
-
         controls.set_difficulty(main_menu.difficulty.get_difficulty())
 
         if not main_menu.is_opened and not main_menu.difficulty.is_opened:
@@ -86,7 +85,6 @@ def run_game():
             # Отображение спрайта танка
             tank_topleft.update()
             tank_bottomright.update()
-
             # Отображение плашки на экране
             hp_topleft.update()
             hp_bottomright.update()
@@ -126,7 +124,6 @@ def run_game():
 
 
         main_menu.draw()
-        main_menu.difficulty.draw()
 
         copter_image_index += 1
 
@@ -150,9 +147,6 @@ def run_game():
             elif main_menu.is_opened:
                 # Если нажата кнопка выхода из игры, то программа должна завершиться.
                 main_menu.update(event)
-
-            elif main_menu.difficulty.is_opened:
-                main_menu.difficulty.update(event)
 
             if event.type == pg.QUIT:
                 running = False
