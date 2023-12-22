@@ -12,8 +12,8 @@ class EscapeMenu:
     """
     def __init__(self, screen):
         self.screen = screen
-        self.button_resume = Button(screen, 200, 400, 70, "Продолжить")
-        self.button_main_menu = Button(screen, 300, 400, 70, "Выйти в главное меню")
+        self.button_resume = Button(screen, 200, 350, 70, "Продолжить")
+        self.button_main_menu = Button(screen, 300, 350, 70, "Выйти в главное меню")
         self.is_opened = False
 
     def draw(self, score_topleft, score_bottomright):
