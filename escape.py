@@ -1,5 +1,7 @@
 from menu import Button
 import run
+import tank
+import save_script
 import pygame as pg
 
 
@@ -33,7 +35,6 @@ class EscapeMenu:
             if event.key == pg.K_ESCAPE:
                 self.is_opened = not self.is_opened
 
-
         if self.is_opened:
 
             self.button_resume.update(event)
@@ -47,5 +48,7 @@ class EscapeMenu:
                 self.button_main_menu.state = 'normal'
                 menu.is_opened = True
                 self.is_opened = False
-                # Запускает процесс перезагрузки.
+                # Запускает процесс перезагрузки и сохраняет текущий стейт игры
+                save = save_script.Save()
+                save.drone_kill()
                 run.run_game()

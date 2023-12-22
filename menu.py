@@ -2,6 +2,7 @@
 import sys
 import pygame as pg
 import pygame.font
+import save_script
 
 
 class Button:
@@ -118,7 +119,7 @@ class MainMenu:
 
         if self.button_start.state == 'pressed':
             self.button_start.state = 'normal'
-            self.difficulty.is_opened  = True
+            self.difficulty.is_opened = True
 
         elif self.button_exit.state == 'pressed':
             sys.exit()
@@ -207,6 +208,8 @@ class VictoryMenu:
         self.font = pygame.font.Font('fonts/minecraft.ttf', 60)
         self.font_color = (255, 255, 255)
         self.font_shadow_color = (0, 0, 0)
+        self.saved_info = []
+        self.save = save_script.Save()
 
     def draw(self, tank_topleft, tank_bottom_right):
 
@@ -215,25 +218,33 @@ class VictoryMenu:
             text_shadow = self.font.render("Победа Русских!", True, self.font_shadow_color)
             text = self.font.render("Победа Русских!", True, self.font_color)
             self.is_openned = True
+
             if self.is_openned:
                 self.screen.blit(text_shadow, (90 + 4, 250 + 4))
                 self.screen.blit(text, (90, 250))
+
+            if self.is_openned:
+                self.screen.blit(text_shadow, (90 + 4, 250 + 4))
+                self.screen.blit(text, (125, 250))
+            save = save_script.Save()
+            save.tank_kill(tank_topleft, tank_bottom_right)
 
         elif tank_bottom_right.alive == True and tank_topleft.alive == False:
 
             text_shadow = self.font.render("Victory of the USA!", True, self.font_shadow_color)
             text = self.font.render("Victory of the USA!", True, self.font_color)
             self.is_openned = True
+
             if self.is_openned:
                 self.screen.blit(text_shadow, (70 + 4, 250 + 4))
-                self.screen.blit(text, (70, 250))
+                self.screen.blit(text, (80, 250))
+            self.save.tank_kill(tank_bottom_right, tank_topleft)
 
         elif tank_bottom_right.alive == False and tank_topleft.alive == False:
 
             text_shadow = self.font.render("Victory of the USA!", True, self.font_shadow_color)
-            text = self.font.render("Ничья", True, self.font_color)
+            text = self.font.render(f"Ничья", True, self.font_color)
             self.is_openned = True
             if self.is_openned:
                 self.screen.blit(text_shadow, (100 + 4, 250 + 4))
-                self.screen.blit(text, (100, 250))
 
