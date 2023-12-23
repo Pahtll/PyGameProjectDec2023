@@ -13,7 +13,7 @@ clock = pg.time.Clock()
 FPS = 60
 WIDTH, HEIGHT = 800, 600
 screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption('tanki v tanki')
+pg.display.set_caption('Tanchiki!')
 
 # Иконка для приложения
 icon = pg.image.load('images/tank_topleft/tank1_up.png')
@@ -150,6 +150,8 @@ def run_game():
                 main_menu.update(event)
 
             if event.type == pg.QUIT:
+                save = save_script.Save()
+                save.save_overwrighting()
                 score.delete_scores()
                 running = False
                 pg.quit()

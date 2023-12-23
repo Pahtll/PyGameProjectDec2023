@@ -1,6 +1,9 @@
 """Создание пуль, танков"""
 import pygame as pg, pygame.sprite, field, copter, animations, tank
 
+import save_script
+
+
 class Bullet(pg.sprite.Sprite):
     """Создаём пулю, которая является спрайтом"""
 
@@ -126,6 +129,10 @@ class Tank(pg.sprite.Sprite):
                     copter_object.hp -= bullet.damage
                     if copter_object.hp <= 0:
                         self.killed_drones += 1
+                        if self.__class__ is TankTopLeft:
+                            save_script.Save.tank_topleft_drones += 1
+                        else:
+                            save_script.Save.tank_bottomright_drones += 1
 
             # Проверяет, касается ли пуля другого танка.
             hit_tank = pygame.sprite.spritecollide(other_tank, bullets, True)
@@ -138,6 +145,10 @@ class Tank(pg.sprite.Sprite):
                 hp_other_tank.red_line_diff -= difference
                 if other_tank.hp <= 0:
                     self.killed_tanks += 1
+                    if self.__class__ is TankTopLeft:
+                        save_script.Save.tank_topleft_kills += 1
+                    else:
+                        save_script.Save.tank_bottomright_kills += 1
 
         # Берём по коробке из группы спрайтов коробок. Для проверки
         for box in boxes.sprites():

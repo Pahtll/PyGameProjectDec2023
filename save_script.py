@@ -4,7 +4,9 @@ import csv
 
 class Save:
     tank_topleft_kills = 0
+    tank_topleft_drones = 0
     tank_bottomright_kills = 0
+    tank_bottomright_drones = 0
     def __init__(self):
         self.saves_info = []
         self.tank_topleft_stats = list()
@@ -28,6 +30,17 @@ class Save:
     def save_overwrighting(self):
         with open("saves.csv", "w", newline='') as csvfile:
             csvwriter = csv.writer(csvfile)
+            with open("scores/scores.txt", "r") as scorefile:
+                both_res_str = scorefile.readline()
+                both_res_int = list(map(int, both_res_str.split(' ')))
+
+                self.tank_topleft_stats[0] += both_res_int[0]
+                self.tank_bottomright_stats[0] += both_res_int[1]
+                self.tank_topleft_stats[1] += self.tank_topleft_kills
+                self.tank_bottomright_stats[1] += self.tank_bottomright_kills
+                self.tank_topleft_stats[2] += self.tank_topleft_drones
+                self.tank_bottomright_stats[2] += self.tank_bottomright_drones
+
 
             # Поля сохранений
             fields = ['score', 'tank_kills', 'drone_kills']
@@ -37,26 +50,3 @@ class Save:
                     self.tank_bottomright_stats]
             csvwriter.writerow(fields)
             csvwriter.writerows(rows)
-            self.some_tank_killed = False
-
-    def drone_kill(self):
-        self.tank_topleft_stats[2] += tank.TankTopLeft.killed_drones
-        self.tank_bottomright_stats[2] += tank.TankBottomRight.killed_drones
-        self.save_overwrighting()
-
-
-    def tank_kill(self, tank_scorer, other_tank):
-
-        if tank_scorer.__class__ == tank.TankTopLeft and not self.some_tank_killed:
-            if not other_tank.alive:
-                self.tank_topleft_stats[0] += 10
-                self.tank_topleft_kills += 1
-                self.tank_topleft_stats[1] += 1
-                self.save_overwrighting()
-
-        if tank_scorer.__class__ == tank.TankBottomRight and not self.some_tank_killed:
-            if not other_tank.alive:
-                self.tank_bottomright_stats[0] += 10
-                self.tank_bottomright_kills += 1
-                self.tank_bottomright_stats[1] += 1
-                self.save_overwrighting()

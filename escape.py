@@ -1,4 +1,5 @@
 """Создание эскейп меню"""
+import tank
 from menu import Button
 import run, pygame as pg, score, save_script
 
@@ -50,6 +51,8 @@ class EscapeMenu:
                 menu.is_opened = True
                 self.is_opened = False
                 # Запускает процесс перезагрузки и сохраняет текущий стейт игры
-                save = save_script.Save()
-                save.drone_kill()
+                save_script.Save.tank_topleft_kills += tank.TankTopLeft.killed_tanks
+                save_script.Save.tank_bottomright_kills += tank.TankBottomRight.killed_tanks
+                save_script.Save.tank_topleft_drones += tank.TankTopLeft.killed_drones
+                save_script.Save.tank_bottomright_drones += tank.TankBottomRight.killed_drones
                 run.run_game()

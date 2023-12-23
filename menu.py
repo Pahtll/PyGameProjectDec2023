@@ -1,5 +1,5 @@
 """Здесь прописано меню, которое открывается на клавишу escape"""
-import sys, pygame as pg, pygame.font, score, save_script
+import sys, pygame as pg, pygame.font, score, save_script, tank
 
 
 class Button:
@@ -118,6 +118,12 @@ class MainMenu:
             self.difficulty.is_opened = True
 
         elif self.button_exit.state == 'pressed':
+            save = save_script.Save()
+            save.save_overwrighting()
+            save_script.Save.tank_topleft_kills += tank.TankTopLeft.killed_tanks
+            save_script.Save.tank_bottomright_kills += tank.TankBottomRight.killed_tanks
+            save_script.Save.tank_topleft_drones += tank.TankTopLeft.killed_drones
+            save_script.Save.tank_bottomright_drones += tank.TankBottomRight.killed_drones
             score.delete_scores()
             sys.exit()
 
@@ -301,7 +307,6 @@ class VictoryMenu:
         self.font_color = (255, 255, 255)
         self.font_shadow_color = (0, 0, 0)
         self.saved_info = []
-        self.save = save_script.Save()
 
     def draw(self, tank_topleft, tank_bottomright):
 
@@ -315,8 +320,6 @@ class VictoryMenu:
                 self.screen.blit(text_shadow, (90 + 4, 250 + 4))
                 self.screen.blit(text, (90, 250))
 
-            save = save_script.Save()
-            save.tank_kill(tank_topleft, tank_bottomright)
 
         elif tank_bottomright.alive == True and tank_topleft.alive == False:
 
@@ -327,7 +330,6 @@ class VictoryMenu:
             if self.is_openned:
                 self.screen.blit(text_shadow, (70 + 4, 250 + 4))
                 self.screen.blit(text, (80, 250))
-            self.save.tank_kill(tank_bottomright, tank_topleft)
 
         elif tank_bottomright.alive == False and tank_topleft.alive == False:
 
