@@ -5,5 +5,3 @@ __pycache__/field.cpython-311.pyc
 *.xml
 .idea/misc.xml
 
-saves.csv
-*.csv
