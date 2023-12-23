@@ -131,7 +131,6 @@ class Tank(pg.sprite.Sprite):
             hit_tank = pygame.sprite.spritecollide(other_tank, bullets, True)
 
             if hit_tank:
-                print(other_tank.hp)
                 other_tank.hp -= bullet.damage
                 self.hit_other_tank += 1
                 difference = round((hp_other_tank.green_line.width * (1 - (other_tank.hp / tank.Tank.hp))) - hp_other_tank.red_line.width)

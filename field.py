@@ -20,6 +20,9 @@ class Box(pgsp.Sprite):
         self.rect.x = self.coordinates[0]
         self.rect.y = self.coordinates[1]
         self.is_copter_inside = False
+        if random.randint(1, 2) == 1:
+            self.is_copter_inside = True
+
 
 class Field:
     """

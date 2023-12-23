@@ -129,19 +129,19 @@ class MainMenu:
             self.difficulty.is_opened = False
             self.is_opened = False
             self.difficulty.button_difficulty_1.state = 'normal'
-            self.difficulty.difficluty = 1
+            self.difficulty.difficulty = 1
 
         elif self.difficulty.button_difficulty_2.state == 'pressed':
             self.difficulty.is_opened = False
             self.is_opened = False
             self.difficulty.button_difficulty_2.state = 'normal'
-            self.difficulty.difficluty = 2
+            self.difficulty.difficulty = 2
 
         elif self.difficulty.button_difficulty_3.state == 'pressed':
             self.difficulty.is_opened = False
             self.is_opened = False
             self.difficulty.button_difficulty_3.state = 'normal'
-            self.difficulty.difficluty = 3
+            self.difficulty.difficulty = 3
 
         elif self.difficulty.back_to_menu.state == 'pressed':
             self.difficulty.is_opened = False
@@ -175,21 +175,21 @@ class DifficultyChangeMenu:
             self.button_difficulty_2.update(event)
             self.button_difficulty_3.update(event)
             self.back_to_menu.update(event)
-
-        if self.button_difficulty_1.state == 'pressed':
-            self.is_opened = False
-            self.button_difficulty_1.state = 'normal'
-            self.difficulty = 1
-
-        elif self.button_difficulty_2.state == 'pressed':
-            self.is_opened = False
-            self.button_difficulty_2.state = 'normal'
-            self.difficulty = 2
-
-        elif self.button_difficulty_3.state == 'pressed':
-            self.is_opened = False
-            self.button_difficulty_3.state = 'normal'
-            self.difficulty = 3
+        #
+        # if self.button_difficulty_1.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_1.state = 'normal'
+        #     self.difficulty = 1
+        #
+        # elif self.button_difficulty_2.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_2.state = 'normal'
+        #     self.difficulty = 2
+        #
+        # elif self.button_difficulty_3.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_3.state = 'normal'
+        #     self.difficulty = 3
 
     def get_difficulty(self):
         return self.difficulty
