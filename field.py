@@ -19,7 +19,8 @@ class Box(pgsp.Sprite):
         # Передаем два нижних атрибута, чтобы rect понимал размеры коробки и обрабатывал её хитбокс
         self.rect.x = self.coordinates[0]
         self.rect.y = self.coordinates[1]
-        self.is_copter_inside = False
+        self.is_copter_inside = random.randint(1,2)
+
 
 class Field:
     """

@@ -98,5 +98,6 @@ class Copter(pygame.sprite.Sprite):
         self.screen.blit(self.images[image_index], (self.x, self.y))
 
     def die(self, copters):
+
         if self.hp <= 0:
             copters.remove(self)
