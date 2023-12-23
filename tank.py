@@ -146,9 +146,9 @@ class Tank(pg.sprite.Sprite):
                 if other_tank.hp <= 0:
                     self.killed_tanks += 1
                     if self.__class__ is TankTopLeft:
-                        save_script.Save.tank_topleft_kills += 1
-                    else:
                         save_script.Save.tank_bottomright_kills += 1
+                    else:
+                        save_script.Save.tank_topleft_kills += 1
 
         # Берём по коробке из группы спрайтов коробок. Для проверки
         for box in boxes.sprites():
