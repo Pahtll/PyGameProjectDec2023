@@ -102,6 +102,32 @@ class MainMenu:
             score.delete_scores()
             sys.exit()
 
+        elif self.button_stats.state == 'pressed':
+            self.stats_menu.is_opened = True
+            self.button_stats.state = 'normal'
+
+        elif self.difficulty.button_difficulty_1.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.is_opened = False
+            self.difficulty.button_difficulty_1.state = 'normal'
+            self.difficulty.difficulty = 1
+
+        elif self.difficulty.button_difficulty_2.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.is_opened = False
+            self.difficulty.button_difficulty_2.state = 'normal'
+            self.difficulty.difficulty = 2
+
+        elif self.difficulty.button_difficulty_3.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.is_opened = False
+            self.difficulty.button_difficulty_3.state = 'normal'
+            self.difficulty.difficulty = 3
+
+        elif self.difficulty.back_to_menu.state == 'pressed':
+            self.difficulty.is_opened = False
+            self.difficulty.back_to_menu.state = 'normal'
+
 class DifficultyChangeMenu:
     """Главное меню, из которого происходит вход в игру и выход из неё."""
 
@@ -143,6 +169,27 @@ class DifficultyChangeMenu:
             self.is_opened = False
             self.button_difficulty_3.state = 'normal'
             self.difficluty = 3
+        """Проверка нажаты ли кнопки"""
+        if self.is_opened:
+            self.button_difficulty_1.update(event)
+            self.button_difficulty_2.update(event)
+            self.button_difficulty_3.update(event)
+            self.back_to_menu.update(event)
+        #
+        # if self.button_difficulty_1.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_1.state = 'normal'
+        #     self.difficulty = 1
+        #
+        # elif self.button_difficulty_2.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_2.state = 'normal'
+        #     self.difficulty = 2
+        #
+        # elif self.button_difficulty_3.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_3.state = 'normal'
+        #     self.difficulty = 3
 
     def get_difficulty(self):
         return self.difficluty

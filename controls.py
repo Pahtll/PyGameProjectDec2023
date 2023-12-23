@@ -66,4 +66,4 @@ def set_difficulty(range):
             copter.Copter.speed = 2
             copter.Copter.damage = 5
             copter.Copter.hp = 100
-
+            score.kill_tank_coefficient = 24
