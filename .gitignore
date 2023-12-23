@@ -6,3 +6,4 @@ __pycache__/field.cpython-311.pyc
 .idea/misc.xml
 
 saves.csv
+*.csv

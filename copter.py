@@ -1,7 +1,4 @@
-import pygame as pg, tank
-import pygame.sprite
-import math
-
+import pygame as pg, tank, pygame.sprite, math
 
 class Copter(pygame.sprite.Sprite):
     """
@@ -101,6 +98,5 @@ class Copter(pygame.sprite.Sprite):
         self.screen.blit(self.images[image_index], (self.x, self.y))
 
     def die(self, copters):
-
         if self.hp <= 0:
             copters.remove(self)

@@ -1,8 +1,5 @@
 """Здесь прописано меню, которое открывается на клавишу escape"""
-import sys
-import pygame as pg
-import pygame.font
-import save_script
+import sys, pygame as pg, pygame.font, score, save_script
 
 
 class Button:
@@ -121,6 +118,7 @@ class MainMenu:
             self.difficulty.is_opened = True
 
         elif self.button_exit.state == 'pressed':
+            score.delete_scores()
             sys.exit()
 
         elif self.button_stats.state == 'pressed':
@@ -131,19 +129,19 @@ class MainMenu:
             self.difficulty.is_opened = False
             self.is_opened = False
             self.difficulty.button_difficulty_1.state = 'normal'
-            self.difficulty.difficluty = 1
+            self.difficulty.difficulty = 1
 
         elif self.difficulty.button_difficulty_2.state == 'pressed':
             self.difficulty.is_opened = False
             self.is_opened = False
             self.difficulty.button_difficulty_2.state = 'normal'
-            self.difficulty.difficluty = 2
+            self.difficulty.difficulty = 2
 
         elif self.difficulty.button_difficulty_3.state == 'pressed':
             self.difficulty.is_opened = False
             self.is_opened = False
             self.difficulty.button_difficulty_3.state = 'normal'
-            self.difficulty.difficluty = 3
+            self.difficulty.difficulty = 3
 
         elif self.difficulty.back_to_menu.state == 'pressed':
             self.difficulty.is_opened = False
@@ -160,7 +158,7 @@ class DifficultyChangeMenu:
         self.back_to_menu = Button(screen, 500, 250, 70, "Назад")
         self.is_opened = False
         self.main_menu_need_to_close = False
-        self.difficluty = 0
+        self.difficulty = 0
 
     def draw(self):
         """Отрисовывает меню, состоящее из кнопок и заднего фона """
@@ -171,16 +169,31 @@ class DifficultyChangeMenu:
             self.back_to_menu.draw()
 
     def update(self, event):
-        """Проверка нажаты ли кнопки """
+        """Проверка нажаты ли кнопки"""
         if self.is_opened:
             self.button_difficulty_1.update(event)
             self.button_difficulty_2.update(event)
             self.button_difficulty_3.update(event)
             self.back_to_menu.update(event)
+        #
+        # if self.button_difficulty_1.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_1.state = 'normal'
+        #     self.difficulty = 1
+        #
+        # elif self.button_difficulty_2.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_2.state = 'normal'
+        #     self.difficulty = 2
+        #
+        # elif self.button_difficulty_3.state == 'pressed':
+        #     self.is_opened = False
+        #     self.button_difficulty_3.state = 'normal'
+        #     self.difficulty = 3
 
     def get_difficulty(self):
-        return self.difficluty
-
+        return self.difficulty
+      
 class StatsMenu():
 
     def __init__(self, screen):
@@ -189,13 +202,14 @@ class StatsMenu():
         self.stats = save_script.Save()
         self.font = pygame.font.Font('fonts/minecraft.ttf', 20 )
         self.title_font = pygame.font.Font('fonts/minecraft.ttf', 30)
-        self.title_topleft_font_color = (0, 255, 0)
-        self.title_bottomright_font_color = (255, 255, 0)
 
+        self.font_tank_topleft_color = (0, 255, 0)
+        self.font_tank_bottomright_color = (255, 255, 0)
         self.font_color = (255, 255, 255)
         self.font_shadow_color = (0, 0, 0)
         self.stats_tank_topleft_title = self.title_font.render('Статистика зелёного танка:',
-                                                   True, self.title_topleft_font_color)
+                                                   True, self.font_tank_topleft_color)
+
         self.stats_tank_topleft_title_shadow = self.title_font.render('Статистика зелёного танка:',
                                                          True, self.font_shadow_color)
 
@@ -219,7 +233,8 @@ class StatsMenu():
 
 
         self.stats_tank_bottomright_title = self.title_font.render('Статистика жёлтого танка:',
-                                                               True, self.title_bottomright_font_color)
+
+                                                               True, self.font_tank_bottomright_color)
         self.stats_tank_bottomright_title_shadow = self.title_font.render('Статистика жёлтого танка:',
                                                                       True, self.font_shadow_color)
         self.stats_tank_bottomright_score = self.font.render(f'Общее количество очков: {self.stats.tank_bottomright_stats[0]}',
@@ -303,9 +318,6 @@ class VictoryMenu:
                 self.screen.blit(text_shadow, (90 + 4, 250 + 4))
                 self.screen.blit(text, (90, 250))
 
-            if self.is_openned:
-                self.screen.blit(text_shadow, (90 + 4, 250 + 4))
-                self.screen.blit(text, (125, 250))
             save = save_script.Save()
             save.tank_kill(tank_topleft, tank_bottomright)
 
@@ -322,8 +334,8 @@ class VictoryMenu:
 
         elif tank_bottomright.alive == False and tank_topleft.alive == False:
 
-            text_shadow = self.font.render("Victory of the USA!", True, self.font_shadow_color)
-            text = self.font.render(f"Ничья", True, self.font_color)
+            text_shadow = self.font.render("Ничья", True, self.font_shadow_color)
+            text = self.font.render("Ничья", True, self.font_color)
             self.is_openned = True
             if self.is_openned:
                 self.screen.blit(text_shadow, (100 + 4, 250 + 4))
