@@ -189,10 +189,13 @@ class StatsMenu():
         self.stats = save_script.Save()
         self.font = pygame.font.Font('fonts/minecraft.ttf', 20 )
         self.title_font = pygame.font.Font('fonts/minecraft.ttf', 30)
+        self.title_topleft_font_color = (0, 255, 0)
+        self.title_bottomright_font_color = (255, 255, 0)
+
         self.font_color = (255, 255, 255)
         self.font_shadow_color = (0, 0, 0)
         self.stats_tank_topleft_title = self.title_font.render('Статистика зелёного танка:',
-                                                   True, self.font_color)
+                                                   True, self.title_topleft_font_color)
         self.stats_tank_topleft_title_shadow = self.title_font.render('Статистика зелёного танка:',
                                                          True, self.font_shadow_color)
 
@@ -216,7 +219,7 @@ class StatsMenu():
 
 
         self.stats_tank_bottomright_title = self.title_font.render('Статистика жёлтого танка:',
-                                                               True, self.font_color)
+                                                               True, self.title_bottomright_font_color)
         self.stats_tank_bottomright_title_shadow = self.title_font.render('Статистика жёлтого танка:',
                                                                       True, self.font_shadow_color)
         self.stats_tank_bottomright_score = self.font.render(f'Общее количество очков: {self.stats.tank_bottomright_stats[0]}',
